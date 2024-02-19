@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Images Index</title>
+</head>
+<body>
+    <h1>Embedded Images</h1>
+    <div id="images"></div>
+
+    <script>
+        // Function to embed images
+        function embedImages() {
+            const imagesDiv = document.getElementById('images');
+            
+            // Array of image file names
+            const imageFiles = [
+                "Black-tusk_Drubal_Banner.png",
+                "Black-tusk_Drubal_profile.png",
+                "Dippletop_banner.png",
+                "Dippletop_profile.png",
+                "Dragons-Den_Imbrixia-the-trickster_Banner.png",
+                "Dragons-Den_Imbrixia-the-trickster_profile.png",
+                "Golems-gem_Dex_banner.png",
+                "Golems-gem_Dex_profile.png",
+                "Hestannia_banner.png",
+                "Hestannia_profile.png",
+                "Illyath_banner.png",
+                "Illyath_profile.png",
+                "Luizhana_banner.png",
+                "Luizhana_profile.png",
+                "Melvins-menagerie_Melvin_banner.png",
+                "Melvins-menagerie_Melvin_profile.png",
+                "Milando_Banner.png",
+                "Milando_profile.png",
+                "Screen Shot 2024-02-20 at 1.59.55 am.png",
+                "The-collector_Drakshara_banner.png",
+                "The-collector_Drakshara_profile.png",
+                "azan-the-wanderer_profile.png",
+                "bronzeforge-halls_banner.png",
+                "bronzeforge-halls_profile.png",
+                "calypso_banner.png",
+                "calypso_profile.png",
+                "dragon-cartel_Sniv_banner.png",
+                "dragon-cartel_Sniv_profile.png",
+                "saraab_banner.png",
+                "saraab_profile.png",
+                "shariil_banner.png",
+                "shariil_profile.png",
+                "the-akward-ettercap_banner.png",
+                "the-akward-ettercap_profile.png",
+                "timeless-tower_ezkellion_banner.png",
+                "timeless-tower_ezkellion_profile.png",
+                "vil_banner.png",
+                "vil_profile.png",
+                "xins-gallery_sorabia-xiniusa_banner.png",
+                "xins-gallery_sorabia-xiniusa_profile.png"
+            ];
+
+            // Loop through image file names
+            imageFiles.forEach(fileName => {
+                // Create image element
+                const img = document.createElement('img');
+                // Set image source to file name
+                img.src = fileName;
+                // Append image to images container
+                imagesDiv.appendChild(img);
+            });
+        }
+
+        // Call function to embed images when the page loads
+        window.onload = embedImages;
+    </script>
+</body>
+</html>
