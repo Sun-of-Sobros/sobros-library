@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Images Index</title>
+</head>
+<body>
+    <h1>Embedded Images</h1>
+    <div id="images"></div>
+
+    <script>
+        // Function to embed images
+        function embedImages() {
+            const imagesDiv = document.getElementById('images');
+            
+            // Array of image file names
+            const imageFiles = [
+                "Equinara, the Accountant.webp",
+                "Osirion, the River Warden,.webp",
+                "Thalnok, the Spirit of Osnus.webp",
+                "sfetra, the Chaotic Tempest,.webp"
+            ];
+
+            // Loop through image file names
+            imageFiles.forEach(fileName => {
+                // Create image element
+                const img = document.createElement('img');
+                // Set image source to file name
+                img.src = fileName;
+                // Append image to images container
+                imagesDiv.appendChild(img);
+            });
+        }
+
+        // Call function to embed images when the page loads
+        window.onload = embedImages;
+    </script>
+</body>
+</html>
