@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Embedded Images Index</title>
     <link rel="stylesheet" href="styles.css"> <!-- Include external CSS file -->
+    <style>
+        /* Add square thumbnail CSS */
+        .square-image {
+            width: 200px; /* Adjust the width to your preference */
+            height: 200px; /* Adjust the height to your preference */
+            object-fit: cover;
+            cursor: pointer; /* Add cursor pointer to indicate clickability */
+        }
+    </style>
 </head>
 <body>
     <h1>Embedded Images</h1>
@@ -15,11 +24,6 @@
     </div>
 
     <script>
-        // Function to display full-size image in new tab
-        function displayImageInNewTab(fileName) {
-            window.open(fileName, '_blank'); // Open image in new tab
-        }
-
         // Function to display full-size image in modal
         function displayImage(fileName) {
             const modal = document.getElementById('modal');
@@ -47,12 +51,12 @@
             imageFiles.forEach(fileName => {
                 // Create thumbnail div element
                 const thumbnail = document.createElement('div');
-                // Set thumbnail class for styling
-                thumbnail.classList.add('thumbnail');
+                // Set thumbnail classes for styling
+                thumbnail.classList.add('thumbnail', 'square-image');
                 // Set background image for thumbnail
                 thumbnail.style.backgroundImage = `url(${fileName})`;
                 // Attach click event listener to display full-size image
-                thumbnail.addEventListener('click', () => displayImageInNewTab(fileName));
+                thumbnail.addEventListener('click', () => displayImage(fileName));
                 // Append thumbnail to images container
                 imagesDiv.appendChild(thumbnail);
             });
