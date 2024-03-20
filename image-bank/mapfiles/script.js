@@ -21,14 +21,27 @@ function extractSize(fileName) {
     return null;
 }
 
+// Function to fetch image files from directory
+async function fetchImageFiles() {
+    try {
+        const response = await fetch('list_of_image_files.php'); // Change the URL to match your directory listing file
+        if (!response.ok) {
+            throw new Error('Failed to fetch image files');
+        }
+        const data = await response.json();
+        return data.imageFiles;
+    } catch (error) {
+        console.error('Error fetching image files:', error);
+        return [];
+    }
+}
+
 // Function to embed images
-function embedImages() {
+async function embedImages() {
     const imagesDiv = document.getElementById('images');
 
-    // Array of image file names (update this array with your image file names)
-    const imageFiles = [
-        // Add your image file names here
-    ];
+    // Fetch image files from directory
+    const imageFiles = await fetchImageFiles();
 
     // Loop through image file names
     imageFiles.forEach(fileName => {
