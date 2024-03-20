@@ -14,47 +14,7 @@
         <img id="modalImg" src="" alt="Full Size Image">
     </div>
 
-    <script>
-        // Function to display full-size image in modal
-        function displayImage(fileName) {
-            const modal = document.getElementById('modal');
-            const modalImg = document.getElementById('modalImg');
-            modal.style.display = 'block';
-            modalImg.src = fileName;
-        }
-
-        // Function to close modal
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.style.display = 'none';
-        }
-
-        // Function to embed images
-        function embedImages() {
-            const imagesDiv = document.getElementById('images');
-            
-            // Array of image file names
-            const imageFiles = [
-                // Your array of image file names
-            ];
-
-            // Loop through image file names
-            imageFiles.forEach(fileName => {
-                // Create thumbnail image element
-                const thumbnail = document.createElement('img');
-                // Set thumbnail class for styling
-                thumbnail.classList.add('thumbnail');
-                // Set thumbnail source to file name
-                thumbnail.src = fileName;
-                // Attach click event listener to display full-size image
-                thumbnail.addEventListener('click', () => displayImage(fileName));
-                // Append thumbnail to images container
-                imagesDiv.appendChild(thumbnail);
-            });
-        }
-
-        // Call function to embed images when the page loads
-        window.onload = embedImages;
-    </script>
+    <!-- Link to your JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
