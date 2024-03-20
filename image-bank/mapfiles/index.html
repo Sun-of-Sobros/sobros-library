@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<link rel="stylesheet" href="styles.css">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,6 +15,11 @@
     </div>
 
     <script>
+        // Function to display full-size image in new tab
+        function displayImageInNewTab(fileName) {
+            window.open(fileName, '_blank'); // Open image in new tab
+        }
+
         // Function to display full-size image in modal
         function displayImage(fileName) {
             const modal = document.getElementById('modal');
@@ -48,7 +52,7 @@
                 // Set background image for thumbnail
                 thumbnail.style.backgroundImage = `url(${fileName})`;
                 // Attach click event listener to display full-size image
-                thumbnail.addEventListener('click', () => displayImage(fileName));
+                thumbnail.addEventListener('click', () => displayImageInNewTab(fileName));
                 // Append thumbnail to images container
                 imagesDiv.appendChild(thumbnail);
             });
