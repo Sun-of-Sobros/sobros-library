@@ -17,7 +17,20 @@
 </head>
 <body>
     <h1>Embedded Images</h1>
-    <div id="images"></div>
+    <div id="images">
+        <?php
+            // Directory containing images
+            $directory = 'images/';
+
+            // Get all files in the directory
+            $files = glob($directory . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
+
+            // Loop through files and display as thumbnails
+            foreach ($files as $file) {
+                echo '<div class="thumbnail square-image" style="background-image: url(' . $file . ')" onclick="displayImage(\'' . $file . '\')"></div>';
+            }
+        ?>
+    </div>
 
     <div id="modal" style="display: none;">
         <img id="modalImg" src="" alt="Full Size Image">
@@ -37,33 +50,6 @@
             const modal = document.getElementById('modal');
             modal.style.display = 'none';
         }
-
-        // Function to embed images
-        function embedImages() {
-            const imagesDiv = document.getElementById('images');
-            
-            // Array of image file names
-            const imageFiles = [
-                // Your array of image file names
-            ];
-
-            // Loop through image file names
-            imageFiles.forEach(fileName => {
-                // Create thumbnail div element
-                const thumbnail = document.createElement('div');
-                // Set thumbnail classes for styling
-                thumbnail.classList.add('thumbnail', 'square-image');
-                // Set background image for thumbnail
-                thumbnail.style.backgroundImage = `url(${fileName})`;
-                // Attach click event listener to display full-size image
-                thumbnail.addEventListener('click', () => displayImage(fileName));
-                // Append thumbnail to images container
-                imagesDiv.appendChild(thumbnail);
-            });
-        }
-
-        // Call function to embed images when the page loads
-        window.onload = embedImages;
     </script>
 </body>
 </html>
