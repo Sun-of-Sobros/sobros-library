@@ -4,12 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Embedded Images Index</title>
+    <style>
+        /* Style for thumbnails */
+        .thumbnail {
+            width: 100px; /* Adjust the width as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <h1>Embedded Images</h1>
     <div id="images"></div>
 
+    <div id="modal" style="display: none;">
+        <img id="modalImg" style="max-width: 100%; max-height: 100vh;">
+    </div>
+
     <script>
+        // Function to display full-size image in modal
+        function displayImage(fileName) {
+            const modal = document.getElementById('modal');
+            const modalImg = document.getElementById('modalImg');
+            modal.style.display = 'block';
+            modalImg.src = fileName;
+        }
+
+        // Function to close modal
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+
         // Function to embed images
         function embedImages() {
             const imagesDiv = document.getElementById('images');
@@ -120,11 +147,15 @@
 
             // Loop through image file names
             imageFiles.forEach(fileName => {
-                // Create image element
+                // Create thumbnail image element
                 const img = document.createElement('img');
-                // Set image source to file name
+                // Set thumbnail image source to file name
                 img.src = fileName;
-                // Append image to images container
+                // Add a class to the thumbnail for styling
+                img.classList.add('thumbnail');
+                // Attach click event listener to display full-size image
+                img.addEventListener('click', () => displayImage(fileName));
+                // Append thumbnail image to images container
                 imagesDiv.appendChild(img);
             });
         }
