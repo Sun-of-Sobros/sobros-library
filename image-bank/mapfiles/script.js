@@ -21,10 +21,10 @@ function extractSize(fileName) {
     return null;
 }
 
-// Function to fetch image files from directory
+// Function to fetch image files from JSON file
 async function fetchImageFiles() {
     try {
-        const response = await fetch('list_of_image_files.php'); // Change the URL to match your directory listing file
+        const response = await fetch('image_files.json'); // Change the URL to match your JSON file
         if (!response.ok) {
             throw new Error('Failed to fetch image files');
         }
@@ -40,7 +40,7 @@ async function fetchImageFiles() {
 async function embedImages() {
     const imagesDiv = document.getElementById('images');
 
-    // Fetch image files from directory
+    // Fetch image files from JSON file
     const imageFiles = await fetchImageFiles();
 
     // Loop through image file names
