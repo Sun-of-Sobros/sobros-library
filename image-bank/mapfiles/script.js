@@ -1,9 +1,7 @@
-// Function to display full-size image in modal
+// Function to display full-size image in a new tab
 function displayImage(fileName) {
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImg');
-    modal.style.display = 'block';
-    modalImg.src = fileName;
+    // Open the full-size image in a new tab
+    window.open(fileName, '_blank');
 }
 
 // Function to close modal
