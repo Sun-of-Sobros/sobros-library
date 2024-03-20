@@ -7,11 +7,14 @@
     <link rel="stylesheet" href="styles.css"> <!-- Include external CSS file -->
     <style>
         /* Add square thumbnail CSS */
-        .square-image {
+        .thumbnail {
             width: 200px; /* Adjust the width to your preference */
             height: 200px; /* Adjust the height to your preference */
             object-fit: cover;
             cursor: pointer; /* Add cursor pointer to indicate clickability */
+            background-size: cover;
+            background-position: center;
+            margin: 5px;
         }
     </style>
 </head>
@@ -19,15 +22,16 @@
     <h1>Embedded Images</h1>
     <div id="images">
         <?php
-            // Directory containing images
-            $directory = 'images/';
-
-            // Get all files in the directory
-            $files = glob($directory . '*.{jpg,jpeg,png,gif}', GLOB_BRACE);
-
-            // Loop through files and display as thumbnails
+            $directory = 'images/'; // Directory containing images
+            
+            // Get all files with allowed extensions from the directory
+            $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+            $files = scandir($directory);
             foreach ($files as $file) {
-                echo '<div class="thumbnail square-image" style="background-image: url(' . $file . ')" onclick="displayImage(\'' . $file . '\')"></div>';
+                $extension = pathinfo($file, PATHINFO_EXTENSION);
+                if (in_array($extension, $allowed_extensions)) {
+                    echo '<div class="thumbnail" style="background-image: url(' . $directory . $file . ')" onclick="window.open(\'' . $directory . $file . '\', \'_blank\')"></div>';
+                }
             }
         ?>
     </div>
@@ -37,19 +41,7 @@
     </div>
 
     <script>
-        // Function to display full-size image in modal
-        function displayImage(fileName) {
-            const modal = document.getElementById('modal');
-            const modalImg = document.getElementById('modalImg');
-            modal.style.display = 'block';
-            modalImg.src = fileName;
-        }
-
-        // Function to close modal
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            modal.style.display = 'none';
-        }
+        // No JavaScript is needed for image modal in this version
     </script>
 </body>
 </html>
