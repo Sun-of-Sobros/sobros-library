@@ -5,51 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Embedded Images Index</title>
     <link rel="stylesheet" href="styles.css"> <!-- Include external CSS file -->
-    <style>
-        /* Add square thumbnail CSS */
-        .thumbnail {
-            width: 200px; /* Adjust the width to your preference */
-            height: 200px; /* Adjust the height to your preference */
-            object-fit: cover;
-            cursor: pointer; /* Add cursor pointer to indicate clickability */
-            background-size: cover;
-            background-position: center;
-            margin: 5px;
-        }
-    </style>
 </head>
 <body>
     <h1>Embedded Images</h1>
-    <div id="images">
-        <?php
-            // Get all files in the current directory
-            $files = scandir('./');
-
-            // Filter out non-image files
-            $imageFiles = array_filter($files, function($file) {
-                $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-                return in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
-            });
-
-            foreach ($imageFiles as $fileName) {
-                // Get image dimensions
-                list($width, $height) = getimagesize($fileName);
-
-                // Calculate dimensions for square thumbnail
-                $thumbnailSize = min($width, $height);
-
-                // Create thumbnail element with link to full-size image
-                echo '<a href="' . $fileName . '" target="_blank"><div class="thumbnail" style="background-image: url(' . $fileName . ');"></div></a>';
-            }
-        ?>
-    </div>
+    <div id="images"></div>
 
     <div id="modal" style="display: none;">
         <img id="modalImg" src="" alt="Full Size Image">
     </div>
 
     <script>
-        // No JavaScript is needed for image modal in this version
+        // Function to display full-size image in modal
+        function displayImage(fileName) {
+            const modal = document.getElementById('modal');
+            const modalImg = document.getElementById('modalImg');
+            modal.style.display = 'block';
+            modalImg.src = fileName;
+        }
+
+        // Function to close modal
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.style.display = 'none';
+        }
+
+        // Function to embed images
+        function embedImages() {
+            const imagesDiv = document.getElementById('images');
+            
+            // Array of image file names
+            const imageFiles = [
+                // Your array of image file names
+            ];
+
+            // Loop through image file names
+            imageFiles.forEach(fileName => {
+                // Create thumbnail image element
+                const thumbnail = document.createElement('img');
+                // Set thumbnail class for styling
+                thumbnail.classList.add('thumbnail');
+                // Set thumbnail source to file name
+                thumbnail.src = fileName;
+                // Attach click event listener to display full-size image
+                thumbnail.addEventListener('click', () => displayImage(fileName));
+                // Append thumbnail to images container
+                imagesDiv.appendChild(thumbnail);
+            });
+        }
+
+        // Call function to embed images when the page loads
+        window.onload = embedImages;
     </script>
 </body>
 </html>
