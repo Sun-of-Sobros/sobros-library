@@ -128,7 +128,7 @@
       const imageData = maskCtx.getImageData(0, 0, canvas.width, canvas.height).data;
       pixels.forEach((p) => {
         const index = ((p.y + pixelSize / 2) * canvas.width + (p.x + pixelSize / 2)) * 4;
-        if (imageData[index] === 67) {
+        if (imageData[index] === 67 && imageData[index + 1] === 173 && imageData[index + 2] === 59) {
           p.targetColour = complementaryColour;
         } else {
           p.targetColour = targetColour;
