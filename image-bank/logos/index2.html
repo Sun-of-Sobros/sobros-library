@@ -9,7 +9,6 @@
     body {
       margin: 0;
       background-color: #000;
-      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,7 +26,6 @@
       font-size: 6em;
       opacity: 0;
       position: absolute;
-      color: #000;
     }
   </style>
 </head>
@@ -53,15 +51,14 @@
       "#FFFFFF": "#808080",
       "#000000": "#FFFFFF"
     };
+    const targetColours = Object.keys(complementaryColours);
+    let targetColour = targetColours[Math.floor(Math.random() * targetColours.length)];
+    let complementaryColour = complementaryColours[targetColour];
     let animationInterval;
-    let targetColour = "#00FFFF"; // Set to your desired starting colour
-    let complementaryColour = complementaryColours[targetColour] || "#FFFFFF";
+    let isLogoRevealed = false;
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    ctx.font = `${pixelSize}px monospace`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
 
     const pixels = [];
 
@@ -75,20 +72,22 @@
             colour,
             targetColour,
             flicker: true,
+            locked: false
           });
         }
       }
     }
 
     function randomColour() {
-      const colours = Object.keys(complementaryColours);
-      return colours[Math.floor(Math.random() * colours.length)];
+      return targetColours[Math.floor(Math.random() * targetColours.length)];
     }
 
     function flickerPixels() {
       pixels.forEach((p) => {
         if (p.flicker) {
           p.colour = randomColour();
+        } else if (!p.locked) {
+          p.colour = p.targetColour;
         }
       });
       drawPixels();
@@ -107,6 +106,8 @@
       ctx.fillStyle = complementaryColour;
       const targetText = "CHROMA";
       ctx.font = "bold 100px 'Raleway', sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
       ctx.fillText(targetText, canvas.width / 2, canvas.height / 2);
 
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
@@ -117,8 +118,12 @@
         } else {
           p.targetColour = targetColour;
         }
+        p.locked = true;
         p.flicker = false;
       });
+
+      isLogoRevealed = true;
+      document.getElementById("overlay").style.opacity = 1;
     }
 
     function movePixels() {
@@ -130,9 +135,8 @@
         }
       });
       drawPixels();
-      if (allSettled) {
-        clearInterval(animationInterval);
-        document.getElementById("overlay").style.opacity = 1;
+      if (allSettled && !isLogoRevealed) {
+        createTargetLogo();
       }
     }
 
@@ -141,10 +145,9 @@
       drawPixels();
       animationInterval = setInterval(flickerPixels, 100);
       setTimeout(() => {
-        createTargetLogo();
         clearInterval(animationInterval);
-        animationInterval = setInterval(movePixels, 100);
-      }, 3000);
+        animationInterval = setInterval(movePixels, 50);
+      }, 2000);
     }
 
     document.getElementById("overlay").style.color = complementaryColour;
