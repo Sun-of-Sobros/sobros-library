@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CHROMA Animation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -14,7 +15,7 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      font-family: monospace;
+      font-family: 'Raleway', sans-serif;
     }
     canvas {
       position: absolute;
@@ -23,29 +24,38 @@
     #overlay {
       z-index: 2;
       text-align: center;
-      font-size: 4em;
-      opacity: 0.8;
-      color: #FFFFFF;
+      font-size: 6em;
+      opacity: 0;
       position: absolute;
+      color: #000;
     }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
-  <div id="overlay" style="opacity:0;">CHROMA</div>
+  <div id="overlay">CHROMA</div>
   <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    const colours = [
-      "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF",
-      "#FFA500", "#800080", "#FFC0CB", "#808080", "#00FF00", "#A52A2A",
-      "#FFD700", "#C0C0C0", "#FFFFFF", "#000000"
-    ];
-    const targetText = "CHROMA";
     const pixelSize = 20;
     const gridWidth = Math.ceil(window.innerWidth / pixelSize);
     const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+    const complementaryColours = {
+      "#FF0000": "#00FFFF",
+      "#00FF00": "#FF00FF",
+      "#0000FF": "#FFFF00",
+      "#FFFF00": "#0000FF",
+      "#FF00FF": "#00FF00",
+      "#00FFFF": "#FF0000",
+      "#FFA500": "#800080",
+      "#800080": "#FFA500",
+      "#808080": "#FFFFFF",
+      "#FFFFFF": "#808080",
+      "#000000": "#FFFFFF"
+    };
     let animationInterval;
+    let targetColour = "#00FFFF"; // Set to your desired starting colour
+    let complementaryColour = complementaryColours[targetColour] || "#FFFFFF";
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -63,7 +73,7 @@
             x: x * pixelSize,
             y: y * pixelSize,
             colour,
-            targetColour: colour,
+            targetColour,
             flicker: true,
           });
         }
@@ -71,6 +81,7 @@
     }
 
     function randomColour() {
+      const colours = Object.keys(complementaryColours);
       return colours[Math.floor(Math.random() * colours.length)];
     }
 
@@ -93,26 +104,20 @@
 
     function createTargetLogo() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#FFFFFF";
-      const lines = targetText.split(" ");
-      lines.forEach((line, lineIndex) => {
-        const x = canvas.width / 2;
-        const y = canvas.height / 2 + (lineIndex * pixelSize * 1.5);
-        for (let i = 0; i < line.length; i++) {
-          const char = line[i];
-          ctx.fillText(char, x + (i * pixelSize * 0.6), y);
-        }
-      });
+      ctx.fillStyle = complementaryColour;
+      const targetText = "CHROMA";
+      ctx.font = "bold 100px 'Raleway', sans-serif";
+      ctx.fillText(targetText, canvas.width / 2, canvas.height / 2);
 
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
       pixels.forEach((p) => {
         const index = ((p.y + pixelSize / 2) * canvas.width + (p.x + pixelSize / 2)) * 4;
         if (imageData[index] === 255) {
-          p.targetColour = "#000000";
-          p.flicker = false;
+          p.targetColour = complementaryColour;
         } else {
-          p.targetColour = randomColour();
+          p.targetColour = targetColour;
         }
+        p.flicker = false;
       });
     }
 
@@ -142,6 +147,7 @@
       }, 3000);
     }
 
+    document.getElementById("overlay").style.color = complementaryColour;
     startAnimation();
   </script>
 </body>
