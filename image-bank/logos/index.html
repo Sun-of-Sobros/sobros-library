@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chroma Logo Animation</title>
+  <title>CHROMA Animation</title>
   <style>
     body {
       margin: 0;
@@ -20,106 +20,128 @@
       position: absolute;
       z-index: 1;
     }
+    #overlay {
+      z-index: 2;
+      text-align: center;
+      font-size: 4em;
+      opacity: 0.8;
+      color: #FFFFFF;
+      position: absolute;
+    }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
+  <div id="overlay">CHROMA</div>
   <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    const fontSize = 16;
-    const colourNames = {
-      "Red": "#FF0000",
-      "Green": "#00FF00",
-      "Blue": "#0000FF",
-      "Cyan": "#00FFFF",
-      "Magenta": "#FF00FF",
-      "Yellow": "#FFFF00",
-      "White": "#FFFFFF",
-      "Black": "#000000",
-      "Orange": "#FFA500",
-      "Purple": "#800080",
-      "Pink": "#FFC0CB",
-      "Grey": "#808080",
-      "Lime": "#00FF00",
-      "Brown": "#A52A2A",
-      "Gold": "#FFD700",
-      "Silver": "#C0C0C0"
-    };
-    const colourKeys = Object.keys(colourNames);
-    const randomColourHex = () => colourNames[colourKeys[Math.floor(Math.random() * colourKeys.length)]];
-    const randomColourName = () => colourKeys[Math.floor(Math.random() * colourKeys.length)];
-    const targetText = `
-  ______   __    __   _______    ______  ___      ___      __      
- /" _  "\\ /" |  | "\\ /"      \\  /    " \\|"  \\    /"  |    /""\\     
-(: ( \\___(:  (__)  :|:        |// ____  \\\\   \\  //   |   /    \\    
- \\/ \\     \\/      \\/|_____/   /  /    ) :/\\\\  \\/.    |  /' /\\  \\   
- //  \\ _  //  __  \\\\ //      (: (____/ /|: \\.        | //  __'  \\  
-(:   _) \\(:  (  )  :|:  __   \\\\        /|.  \\    /:  |/   /  \\\\  \\ 
- \\_______)\\__|  |__/|__|  \\___)\\\"_____/ |___|\\__/|___(___/    \\___)
-    `.trim().split("\n");
+    const gridSize = 50;
+    const colours = [
+      "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF",
+      "#FFA500", "#800080", "#FFC0CB", "#808080", "#00FF00", "#A52A2A",
+      "#FFD700", "#C0C0C0", "#FFFFFF", "#000000"
+    ];
+    const targetText = "CHROMA";
+    const pixelSize = 30;
+    const flickerDelay = 100;
+    const gridWidth = Math.ceil(window.innerWidth / pixelSize);
+    const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+    let animationInterval;
 
-    // Determine the canvas size based on targetText dimensions
-    const maxWidth = Math.max(...targetText.map(line => line.length));
-    const maxHeight = targetText.length;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.font = `${pixelSize}px monospace`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
-    const columns = Math.max(Math.floor(window.innerWidth / fontSize), maxWidth);
-    const rows = Math.max(Math.floor(window.innerHeight / fontSize), maxHeight);
+    const pixels = [];
 
-    canvas.width = columns * fontSize;
-    canvas.height = rows * fontSize;
-
-    ctx.font = `${fontSize}px monospace`;
-
-    let particles = [];
-
-    // Initialize the particles array
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < columns; x++) {
-        particles.push({
-          x: x * fontSize,
-          y: y * fontSize,
-          word: Math.random() < 0.5 ? randomColourName() : randomColourHex(),
-          colour: randomColourHex(),
-          opacity: 1,
-        });
+    function initPixels() {
+      for (let x = 0; x < gridWidth; x++) {
+        for (let y = 0; y < gridHeight; y++) {
+          const colour = randomColour();
+          pixels.push({
+            x: x * pixelSize,
+            y: y * pixelSize,
+            colour,
+            targetColour: colour,
+            flicker: true,
+          });
+        }
       }
     }
 
-    function drawParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        ctx.fillStyle = p.colour;
-        ctx.globalAlpha = p.opacity;
-        ctx.fillText(p.word, p.x, p.y + fontSize);
-      });
-      ctx.globalAlpha = 1;
+    function randomColour() {
+      return colours[Math.floor(Math.random() * colours.length)];
     }
 
-    function updateParticles() {
-      particles.forEach((p, index) => {
-        // Determine if the particle aligns with the target logo
-        const xIndex = Math.floor(p.x / fontSize);
-        const yIndex = Math.floor(p.y / fontSize);
-        if (
-          yIndex < targetText.length &&
-          xIndex < targetText[yIndex].length &&
-          targetText[yIndex][xIndex] !== " "
-        ) {
-          p.word = targetText[yIndex][xIndex];
-          p.colour = "#FFFFFF";
-          p.opacity = 1;
-        } else {
-          p.word = Math.random() < 0.5 ? randomColourName() : randomColourHex();
-          p.colour = randomColourHex();
-          p.opacity = Math.random();
+    function flickerPixels() {
+      pixels.forEach((p) => {
+        if (p.flicker) {
+          p.colour = randomColour();
         }
       });
-      drawParticles();
+      drawPixels();
+    }
+
+    function drawPixels() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pixels.forEach((p) => {
+        ctx.fillStyle = p.colour;
+        ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+      });
+    }
+
+    function createTargetLogo() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#FFFFFF";
+      const lines = targetText.split(" ");
+      lines.forEach((line, lineIndex) => {
+        const x = canvas.width / 2;
+        const y = canvas.height / 2 + (lineIndex * pixelSize * 1.5);
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          ctx.fillText(char, x + (i * pixelSize * 0.6), y);
+        }
+      });
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      pixels.forEach((p) => {
+        const index = ((p.y + pixelSize / 2) * canvas.width + (p.x + pixelSize / 2)) * 4;
+        if (imageData[index] === 255) {
+          p.targetColour = "#000000";
+          p.flicker = false;
+        } else {
+          p.targetColour = "#FFFFFF";
+        }
+      });
+    }
+
+    function movePixels() {
+      let allSettled = true;
+      pixels.forEach((p) => {
+        if (p.colour !== p.targetColour) {
+          p.colour = p.targetColour;
+          allSettled = false;
+        }
+      });
+      drawPixels();
+      if (allSettled) {
+        clearInterval(animationInterval);
+        document.getElementById("overlay").style.opacity = 1;
+      }
     }
 
     function startAnimation() {
-      setInterval(updateParticles, 100);
+      initPixels();
+      drawPixels();
+      animationInterval = setInterval(flickerPixels, flickerDelay);
+      setTimeout(() => {
+        createTargetLogo();
+        clearInterval(animationInterval);
+        animationInterval = setInterval(movePixels, 100);
+      }, 3000);
     }
 
     startAnimation();
