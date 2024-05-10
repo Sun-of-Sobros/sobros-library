@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colour Animation</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: monospace;
+    }
+    canvas {
+      position: absolute;
+      z-index: 1;
+    }
+    #overlay {
+      z-index: 2;
+      text-align: center;
+      font-size: 2em;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="overlay">CHROMA</div>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const fontSize = 20;
+    const targetText = "CHROMA";
+    const colourNames = {
+      "Red": "#FF0000",
+      "Green": "#00FF00",
+      "Blue": "#0000FF",
+      "Cyan": "#00FFFF",
+      "Magenta": "#FF00FF",
+      "Yellow": "#FFFF00",
+      "White": "#FFFFFF",
+      "Black": "#000000",
+      "Orange": "#FFA500",
+      "Purple": "#800080",
+      "Pink": "#FFC0CB",
+      "Grey": "#808080",
+      "Lime": "#00FF00",
+      "Brown": "#A52A2A",
+      "Gold": "#FFD700",
+      "Silver": "#C0C0C0"
+    };
+    const colourKeys = Object.keys(colourNames);
+    const randomColourHex = () => colourNames[colourKeys[Math.floor(Math.random() * colourKeys.length)]];
+    const randomColourName = () => colourKeys[Math.floor(Math.random() * colourKeys.length)];
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.font = `${fontSize}px monospace`;
+
+    const targets = [];
+    const particles = [];
+
+    function createTargets() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#fff";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const lines = targetText.split(" ");
+      lines.forEach((line, lineIndex) => {
+        const x = canvas.width / 2;
+        const y = canvas.height / 2 + (lineIndex * fontSize * 1.5);
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          ctx.fillText(char, x + (i * fontSize * 0.6), y);
+          targets.push({
+            char,
+            x: x + (i * fontSize * 0.6),
+            y,
+            colour: "#FFFFFF"
+          });
+        }
+      });
+    }
+
+    function createParticles() {
+      for (let i = 0; i < 200; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const target = targets[Math.floor(Math.random() * targets.length)];
+        const colour = randomColourHex();
+        particles.push({
+          x,
+          y,
+          size: fontSize,
+          targetX: target.x,
+          targetY: target.y,
+          word: Math.random() < 0.5 ? randomColourName() : colour,
+          colour,
+          opacity: Math.random(),
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        ctx.fillStyle = p.colour;
+        ctx.globalAlpha = p.opacity;
+        ctx.fillText(p.word, p.x, p.y);
+      });
+      ctx.globalAlpha = 1;
+    }
+
+    function moveParticles() {
+      particles.forEach((p) => {
+        const dx = p.targetX - p.x;
+        const dy = p.targetY - p.y;
+        p.x += dx * 0.05;
+        p.y += dy * 0.05;
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
+          p.word = p.target.char;
+          p.colour = "#FFFFFF";
+        }
+      });
+      drawParticles();
+    }
+
+    function startAnimation() {
+      createTargets();
+      createParticles();
+      setInterval(moveParticles, 50);
+    }
+
+    startAnimation();
+  </script>
+</body>
+</html>
