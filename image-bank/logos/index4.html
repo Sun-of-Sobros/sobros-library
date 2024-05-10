@@ -9,7 +9,6 @@
     body {
       margin: 0;
       background-color: #000;
-      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -28,7 +27,7 @@
   <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    const pixelSize = 55;
+    const pixelSize = 75;
     const gridWidth = Math.ceil(window.innerWidth / pixelSize);
     const gridHeight = Math.ceil(window.innerHeight / pixelSize);
     const complementaryColours = {
@@ -52,6 +51,11 @@
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    const maskCanvas = document.createElement("canvas");
+    const maskCtx = maskCanvas.getContext("2d");
+    maskCanvas.width = canvas.width;
+    maskCanvas.height = canvas.height;
 
     const pixels = [];
 
@@ -113,18 +117,18 @@
     }
 
     function revealTargetLogo() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = complementaryColour;
+      maskCtx.clearRect(0, 0, canvas.width, canvas.height);
+      maskCtx.fillStyle = complementaryColour;
       const targetText = "CHROMA";
-      ctx.font = "bold 200px 'Raleway', sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(targetText, canvas.width / 2, canvas.height / 2);
+      maskCtx.font = "bold 200px 'Raleway', sans-serif";
+      maskCtx.textAlign = "center";
+      maskCtx.textBaseline = "middle";
+      maskCtx.fillText(targetText, canvas.width / 2, canvas.height / 2);
 
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      const imageData = maskCtx.getImageData(0, 0, canvas.width, canvas.height).data;
       pixels.forEach((p) => {
         const index = ((p.y + pixelSize / 2) * canvas.width + (p.x + pixelSize / 2)) * 4;
-        if (imageData[index] === 255) {
+        if (imageData[index] === 67) {
           p.targetColour = complementaryColour;
         } else {
           p.targetColour = targetColour;
@@ -151,14 +155,15 @@
     function startAnimation() {
       initPixels();
       drawPixels();
-      animationInterval = setInterval(flickerPixels, 50); // Slower flicker
+      animationInterval = setInterval(flickerPixels, 200); // Slower flicker
       setTimeout(() => {
         clearInterval(animationInterval);
         animationInterval = setInterval(lockPixelsToTarget, 50);
-      }, 700); // Start locking sooner
+      }, 500); // Start locking sooner
     }
 
     startAnimation();
   </script>
 </body>
 </html>
+``
