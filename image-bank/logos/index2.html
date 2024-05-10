@@ -113,8 +113,8 @@
         }
       });
       drawPixels();
-      if (allSettled) {
-        clearInterval(animationInterval);
+      if (allSettled && !allLocked) {
+        allLocked = true;
         revealTargetLogo();
       }
     }
@@ -140,10 +140,33 @@
         p.flicker = false;
       });
 
-      animationInterval = setInterval(lockPixelsToTarget, 50);
+      animationInterval = setInterval(minorFlicker, 2000);
+    }
+
+    function minorFlicker() {
+      const flickerCount = Math.floor(Math.random() * 10) + 1;
+      for (let i = 0; i < flickerCount; i++) {
+        const p = pixels[Math.floor(Math.random() * pixels.length)];
+        if (p.locked) {
+          p.flicker = true;
+          p.locked = false;
+        }
+      }
+      lockPixelsToTarget();
     }
 
     function startAnimation() {
       initPixels();
       drawPixels();
-      animationInterval = setInterval(flickerPixels,
+      animationInterval = setInterval(flickerPixels, 100);
+      setTimeout(() => {
+        clearInterval(animationInterval);
+        animationInterval = setInterval(lockPixelsToTarget, 50);
+      }, 5000);
+    }
+
+    document.getElementById("overlay").style.color = complementaryColour;
+    startAnimation();
+  </script>
+</body>
+</html>
