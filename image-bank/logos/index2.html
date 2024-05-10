@@ -55,7 +55,7 @@
     let targetColour = targetColours[Math.floor(Math.random() * targetColours.length)];
     let complementaryColour = complementaryColours[targetColour];
     let animationInterval;
-    let isLogoRevealed = false;
+    let allLocked = false;
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -101,6 +101,23 @@
       });
     }
 
+    function lockPixelsToTarget() {
+      let allSettled = true;
+      pixels.forEach((p) => {
+        if (p.colour === p.targetColour) {
+          p.locked = true;
+          p.flicker = false;
+        } else {
+          allSettled = false;
+        }
+      });
+      drawPixels();
+      if (allSettled) {
+        clearInterval(animationInterval);
+        createTargetLogo();
+      }
+    }
+
     function createTargetLogo() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = complementaryColour;
@@ -118,26 +135,10 @@
         } else {
           p.targetColour = targetColour;
         }
-        p.locked = true;
         p.flicker = false;
       });
 
-      isLogoRevealed = true;
-      document.getElementById("overlay").style.opacity = 1;
-    }
-
-    function movePixels() {
-      let allSettled = true;
-      pixels.forEach((p) => {
-        if (p.colour !== p.targetColour) {
-          p.colour = p.targetColour;
-          allSettled = false;
-        }
-      });
-      drawPixels();
-      if (allSettled && !isLogoRevealed) {
-        createTargetLogo();
-      }
+      animationInterval = setInterval(lockPixelsToTarget, 50);
     }
 
     function startAnimation() {
@@ -146,7 +147,7 @@
       animationInterval = setInterval(flickerPixels, 100);
       setTimeout(() => {
         clearInterval(animationInterval);
-        animationInterval = setInterval(movePixels, 50);
+        animationInterval = setInterval(lockPixelsToTarget, 50);
       }, 2000);
     }
 
