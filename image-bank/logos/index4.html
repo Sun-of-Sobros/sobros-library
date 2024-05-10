@@ -31,7 +31,7 @@
       align-items: center;
       pointer-events: none;
     }
-    video, img {
+    img {
       width: 70%;
       max-width: 800px;
     }
@@ -40,8 +40,7 @@
 <body>
   <canvas id="canvas"></canvas>
   <div class="overlay">
-    <!-- Replace "chroma-logo.gif" with your actual transparent GIF or video file -->
-    <img src="https://Sun-of-Sobros.github.io/sobros-library/image-bank/C0002_2.gif" alt="CHROMA Logo" />
+    <img id="randomLogo" alt="CHROMA Logo" />
   </div>
   <script>
     const canvas = document.getElementById("canvas");
@@ -62,6 +61,25 @@
       "#2E0219": "#97EFE9",
       "#E6AF2E": "#3D348B"
     };
+    const logoBaseURL = "https://sun-of-sobros.github.io/sobros-library/image-bank/mosh/";
+    const logoFiles = [
+      "Chroma-brand_mosh-094.gif",
+      "Chroma-brand_mosh-163.gif",
+      "Chroma-brand_mosh-208.gif",
+      "Chroma-brand_mosh-269.gif",
+      "Chroma-brand_mosh-440.gif",
+      "Chroma-brand_mosh-471.gif",
+      "Chroma-brand_mosh-498.gif",
+      "Chroma-brand_mosh-509.gif",
+      "Chroma-brand_mosh-683.gif",
+      "Chroma-brand_mosh-776.gif",
+      "Chroma-brand_mosh-828.gif",
+      "Chroma-brand_mosh-854.gif",
+      "Chroma-brand_mosh-878.gif",
+      "Chroma-brand_mosh-889.gif",
+      "Chroma-brand_mosh-947.gif",
+      "Chroma-brand_mosh-953.gif"
+    ];
     const targetColours = Object.keys(complementaryColours);
     let targetColour = targetColours[Math.floor(Math.random() * targetColours.length)];
     let complementaryColour = complementaryColours[targetColour];
@@ -72,6 +90,11 @@
     canvas.height = window.innerHeight;
 
     const pixels = [];
+
+    function getRandomLogo() {
+      const randomFile = logoFiles[Math.floor(Math.random() * logoFiles.length)];
+      return logoBaseURL + randomFile;
+    }
 
     function initPixels() {
       for (let x = 0; x < gridWidth; x++) {
@@ -142,6 +165,9 @@
     }
 
     function startAnimation() {
+      // Set the random logo
+      document.getElementById("randomLogo").src = getRandomLogo();
+
       initPixels();
       drawPixels();
       animationInterval = setInterval(flickerPixels, 200); // Slower flicker
