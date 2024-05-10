@@ -9,6 +9,7 @@
     body {
       margin: 0;
       background-color: #000;
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -36,7 +37,10 @@
     img {
       width: 70%;
       max-width: 800px;
-      mix-blend-mode: multiply;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
   </style>
 </head>
@@ -111,7 +115,8 @@
             colour,
             targetColour,
             flicker: true,
-            locked: false
+            locked: false,
+            maskVisible: true
           });
         }
       }
@@ -135,6 +140,10 @@
       pixels.forEach((p) => {
         ctx.fillStyle = p.colour;
         ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+        if (p.maskVisible) {
+          ctx.fillStyle = "#000";
+          ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+        }
       });
     }
 
@@ -145,6 +154,7 @@
           if (p.colour === p.targetColour) {
             p.locked = true;
             p.flicker = false;
+            p.maskVisible = false;
           } else {
             p.colour = randomColour();
             allSettled = false;
@@ -164,6 +174,7 @@
         if (p.locked) {
           p.flicker = true;
           p.locked = false;
+          p.maskVisible = true;
         }
       }
       lockPixelsToTarget();
