@@ -150,11 +150,11 @@
     function startAnimation() {
       initPixels();
       drawPixels();
-      animationInterval = setInterval(flickerPixels, 50); // Reduced the flicker interval
+      animationInterval = setInterval(flickerPixels, 200); // Slower flicker
       setTimeout(() => {
         clearInterval(animationInterval);
         animationInterval = setInterval(lockPixelsToTarget, 50);
-      }, 2500); // Reduced the initial flicker delay by 50%
+      }, 500); // Start locking sooner
     }
 
     startAnimation();
