@@ -36,21 +36,21 @@
   <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    const pixelSize = 70;
+    const pixelSize = 90;
     const gridWidth = Math.ceil(window.innerWidth / pixelSize);
     const gridHeight = Math.ceil(window.innerHeight / pixelSize);
     const complementaryColours = {
-      "#FF0000": "#00FFFF",
-      "#00FF00": "#FF00FF",
-      "#0000FF": "#FFFF00",
-      "#FFFF00": "#0000FF",
-      "#FF00FF": "#00FF00",
-      "#00FFFF": "#FF0000",
-      "#FFA500": "#800080",
-      "#800080": "#FFA500",
-      "#808080": "#FFFFFF",
-      "#FFFFFF": "#808080",
-      "#000000": "#FFFFFF"
+      "#410a53": "#43AD3B",
+      "#DB3A34": "#FFC857",
+      "#BA2C73": "#191D32",
+      "#FF1053": "#66C7F4",
+      "#FF006E": "#8338EC",
+      "#3A86FF": "#FFBE0B",
+      "#FB5607": "#8338EC",
+      "#59CD90": "#3FA7D6",
+      "#EAE151": "#2D2A32",
+      "#2E0219": "#97EFE9",
+      "#E6AF2E": "#3D348B"
     };
     const targetColours = Object.keys(complementaryColours);
     let targetColour = targetColours[Math.floor(Math.random() * targetColours.length)];
