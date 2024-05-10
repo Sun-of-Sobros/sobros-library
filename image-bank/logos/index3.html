@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHROMA Animation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Raleway', sans-serif;
+    }
+    canvas {
+      position: absolute;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const pixelSize = 75;
+    const gridWidth = Math.ceil(window.innerWidth / pixelSize);
+    const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+    const complementaryColours = {
+      "#410a53": "#43AD3B",
+      "#DB3A34": "#FFC857",
+      "#BA2C73": "#191D32",
+      "#FF1053": "#66C7F4",
+      "#FF006E": "#8338EC",
+      "#3A86FF": "#FFBE0B",
+      "#FB5607": "#8338EC",
+      "#59CD90": "#3FA7D6",
+      "#EAE151": "#2D2A32",
+      "#2E0219": "#97EFE9",
+      "#E6AF2E": "#3D348B"
+    };
+    const targetColours = Object.keys(complementaryColours);
+    let targetColour = targetColours[Math.floor(Math.random() * targetColours.length)];
+    let complementaryColour = complementaryColours[targetColour];
+    let animationInterval;
+    let allLocked = false;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const maskCanvas = document.createElement("canvas");
+    const maskCtx = maskCanvas.getContext("2d");
+    maskCanvas.width = canvas.width;
+    maskCanvas.height = canvas.height;
+
+    const pixels = [];
+
+    function initPixels() {
+      for (let x = 0; x < gridWidth; x++) {
+        for (let y = 0; y < gridHeight; y++) {
+          const colour = randomColour();
+          pixels.push({
+            x: x * pixelSize,
+            y: y * pixelSize,
+            colour,
+            targetColour,
+            flicker: true,
+            locked: false
+          });
+        }
+      }
+    }
+
+    function randomColour() {
+      return targetColours[Math.floor(Math.random() * targetColours.length)];
+    }
+
+    function flickerPixels() {
+      pixels.forEach((p) => {
+        if (p.flicker) {
+          p.colour = randomColour();
+        }
+      });
+      drawPixels();
+    }
+
+    function drawPixels() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pixels.forEach((p) => {
+        ctx.fillStyle = p.colour;
+        ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+      });
+    }
+
+    function lockPixelsToTarget() {
+      let allSettled = true;
+      pixels.forEach((p) => {
+        if (!p.locked) {
+          if (p.colour === p.targetColour) {
+            p.locked = true;
+            p.flicker = false;
+          } else {
+            p.colour = randomColour();
+            allSettled = false;
+          }
+        }
+      });
+      drawPixels();
+      if (allSettled && !allLocked) {
+        allLocked = true;
+        applyMask();
+      }
+    }
+
+    function applyMask() {
+      maskCtx.clearRect(0, 0, canvas.width, canvas.height);
+      maskCtx.fillStyle = complementaryColour;
+      const targetText = "CHROMA";
+      maskCtx.font = "bold 200px 'Raleway', sans-serif";
+      maskCtx.textAlign = "center";
+      maskCtx.textBaseline = "middle";
+      maskCtx.fillText(targetText, canvas.width / 2, canvas.height / 2);
+
+      const imageData = maskCtx.getImageData(0, 0, canvas.width, canvas.height).data;
+      pixels.forEach((p) => {
+        const index = ((p.y + pixelSize / 2) * canvas.width + (p.x + pixelSize / 2)) * 4;
+        if (imageData[index] === 67) {
+          p.targetColour = complementaryColour;
+        } else {
+          p.targetColour = targetColour;
+        }
+        p.locked = true;
+        p.flicker = false;
+      });
+
+      animationInterval = setInterval(minorFlicker, 2000);
+    }
+
+    function minorFlicker() {
+      const flickerCount = Math.floor(Math.random() * 10) + 1;
+      for (let i = 0; i < flickerCount; i++) {
+        const p = pixels[Math.floor(Math.random() * pixels.length)];
+        if (p.locked) {
+          p.flicker = true;
+          p.locked = false;
+        }
+      }
+      lockPixelsToTarget();
+    }
+
+    function startAnimation() {
+      initPixels();
+      drawPixels();
+      animationInterval = setInterval(flickerPixels, 200); // Slower flicker
+      setTimeout(() => {
+        clearInterval(animationInterval);
+        animationInterval = setInterval(lockPixelsToTarget, 50);
+      }, 500); // Start locking sooner
+    }
+
+    startAnimation();
+  </script>
+</body>
+</html>
