@@ -9,7 +9,6 @@
     body {
       margin: 0;
       background-color: #000;
-      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -31,16 +30,22 @@
       align-items: center;
       pointer-events: none;
     }
+    a {
+      pointer-events: auto;
+    }
     img {
       width: 70%;
       max-width: 800px;
+      mix-blend-mode: multiply;
     }
   </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
   <div class="overlay">
-    <img id="randomLogo" alt="CHROMA Logo" />
+    <a href="http://www.huevaluechroma.com/011.php" target="_blank" id="logoLink">
+      <img id="randomLogo" alt="CHROMA Logo" />
+    </a>
   </div>
   <script>
     const canvas = document.getElementById("canvas");
