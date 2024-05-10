@@ -28,8 +28,6 @@
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
     const fontSize = 16;
-    const columns = Math.floor(window.innerWidth / fontSize);
-    const rows = Math.floor(window.innerHeight / fontSize);
     const colourNames = {
       "Red": "#FF0000",
       "Green": "#00FF00",
@@ -52,17 +50,25 @@
     const randomColourHex = () => colourNames[colourKeys[Math.floor(Math.random() * colourKeys.length)]];
     const randomColourName = () => colourKeys[Math.floor(Math.random() * colourKeys.length)];
     const targetText = `
-        ,--, .-. .-,---.   .---.          .--.   
-      .' .') | | | | .-.\ / .-. )|\    /|/ /\ \  
-      |  |(_)| `-' | `-'/ | | |(_|(\  / / /__\ \ 
-      \  \   | .-. |   (  | | | |(_)\/  |  __  | 
-       \  `-.| | |)| |\ \ \ `-' /| \  / | |  |)| 
-        \____/(  (_|_| \)\ )---' | |\/| |_|  (_) 
-            (__)       (__(_)    '-'  '-'        
+  ______   __    __   _______    ______  ___      ___      __      
+ /" _  "\\ /" |  | "\\ /"      \\  /    " \\|"  \\    /"  |    /""\\     
+(: ( \\___(:  (__)  :|:        |// ____  \\\\   \\  //   |   /    \\    
+ \\/ \\     \\/      \\/|_____/   /  /    ) :/\\\\  \\/.    |  /' /\\  \\   
+ //  \\ _  //  __  \\\\ //      (: (____/ /|: \\.        | //  __'  \\  
+(:   _) \\(:  (  )  :|:  __   \\\\        /|.  \\    /:  |/   /  \\\\  \\ 
+ \\_______)\\__|  |__/|__|  \\___)\\\"_____/ |___|\\__/|___(___/    \\___)
     `.trim().split("\n");
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // Determine the canvas size based on targetText dimensions
+    const maxWidth = Math.max(...targetText.map(line => line.length));
+    const maxHeight = targetText.length;
+
+    const columns = Math.max(Math.floor(window.innerWidth / fontSize), maxWidth);
+    const rows = Math.max(Math.floor(window.innerHeight / fontSize), maxHeight);
+
+    canvas.width = columns * fontSize;
+    canvas.height = rows * fontSize;
+
     ctx.font = `${fontSize}px monospace`;
 
     let particles = [];
@@ -98,9 +104,9 @@
         if (
           yIndex < targetText.length &&
           xIndex < targetText[yIndex].length &&
-          targetText[yIndex][xIndex] === "#"
+          targetText[yIndex][xIndex] !== " "
         ) {
-          p.word = "#";
+          p.word = targetText[yIndex][xIndex];
           p.colour = "#FFFFFF";
           p.opacity = 1;
         } else {
