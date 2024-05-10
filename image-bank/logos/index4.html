@@ -9,7 +9,6 @@
     body {
       margin: 0;
       background-color: #000;
-      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -37,10 +36,7 @@
     img {
       width: 70%;
       max-width: 800px;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
+      mix-blend-mode: multiply;
     }
   </style>
 </head>
@@ -115,8 +111,7 @@
             colour,
             targetColour,
             flicker: true,
-            locked: false,
-            maskVisible: true
+            locked: false
           });
         }
       }
@@ -140,10 +135,6 @@
       pixels.forEach((p) => {
         ctx.fillStyle = p.colour;
         ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
-        if (p.maskVisible) {
-          ctx.fillStyle = "#000";
-          ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
-        }
       });
     }
 
@@ -154,7 +145,6 @@
           if (p.colour === p.targetColour) {
             p.locked = true;
             p.flicker = false;
-            p.maskVisible = false;
           } else {
             p.colour = randomColour();
             allSettled = false;
@@ -174,7 +164,6 @@
         if (p.locked) {
           p.flicker = true;
           p.locked = false;
-          p.maskVisible = true;
         }
       }
       lockPixelsToTarget();
@@ -186,7 +175,7 @@
 
       initPixels();
       drawPixels();
-      animationInterval = setInterval(flickerPixels, 200); // Slower flicker
+      animationInterval = setInterval(flickerPixels, 20); // Slower flicker
       setTimeout(() => {
         clearInterval(animationInterval);
         animationInterval = setInterval(lockPixelsToTarget, 50);
