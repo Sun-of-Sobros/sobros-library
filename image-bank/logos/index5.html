@@ -67,6 +67,9 @@
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
+    const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
+    const mainColour = colours[Math.floor(Math.random() * colours.length)]; // Main background colour
+
     const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
       x: (i % gridWidth) * pixelSize,
       y: Math.floor(i / gridWidth) * pixelSize,
@@ -88,24 +91,27 @@
     }
 
     function getRandomColour() {
-      const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
       return colours[Math.floor(Math.random() * colours.length)];
     }
 
     function updateCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       pixels.forEach(p => {
-        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour; // Solid colour if not locked
+        if (!p.locked && p.colour !== mainColour) { // Only change those not matching the main colour
+          p.colour = getRandomColour();
+        }
+        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour; // Show pixel if not locked
         ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
       });
     }
 
     function lockRandomPixels() {
-      const unlockedPixels = pixels.filter(p => !p.locked);
-      const toLock = unlockedPixels.slice(0, Math.max(1, unlockedPixels.length * 0.05)); // Lock about 5% each interval
-      toLock.forEach(p => p.locked = true);
+      pixels.forEach(p => {
+        if (p.colour === mainColour && !p.locked) {
+          p.locked = true; // Lock only those that match the main colour
+        }
+      });
       updateCanvas();
-      if (unlockedPixels.length <= toLock.length) clearInterval(animationInterval); // Stop when all are locked
     }
 
     let animationInterval = setInterval(lockRandomPixels, 100);
