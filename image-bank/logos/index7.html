@@ -107,15 +107,8 @@
     }
 
     function getRandomLogo() {
-      const logos = [
-        "Chroma-brand_mosh-094.gif", "Chroma-brand_mosh-163.gif", "Chroma-brand_mosh-208.gif",
-        "Chroma-brand_mosh-269.gif", "Chroma-brand_mosh-440.gif", "Chroma-brand_mosh-471.gif",
-        "Chroma-brand_mosh-498.gif", "Chroma-brand_mosh-509.gif", "Chroma-brand_mosh-683.gif",
-        "Chroma-brand_mosh-776.gif", "Chroma-brand_mosh-828.gif", "Chroma-brand_mosh-854.gif",
-        "Chroma-brand_mosh-878.gif", "Chroma-brand_mosh-889.gif", "Chroma-brand_mosh-947.gif",
-        "Chroma-brand_mosh-953.gif"
-      ];
-      return `https://sun-of-sobros.github.io/sobros-library/image-bank/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
+        const logos = Array.from({length: 25}, (_, i) => `Chroma-brand_mosh-${i + 1}.gif`);
+        return `https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
     }
 
     function getRandomColour() {
