@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CHROMA.Institute | Arts youth collective, Dandenong Ranges, VIC.</title>
+  <title>CHROMA Animation</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Glitchy Font -->
   <style>
     body {
@@ -15,6 +15,7 @@
       height: 100vh;
       overflow: hidden;
       font-family: 'Press+Start+2P', monospace; /* Glitchy Font */
+      background-color: var(--main-bg-color); /* Dynamic background color */
     }
     #logoImage {
       position: absolute;
@@ -24,7 +25,6 @@
       width: 70%;
       max-width: 800px;
       z-index: 1;
-      display: none; /* Initially hidden */
     }
     canvas {
       position: absolute;
@@ -44,12 +44,12 @@
     a {
       text-decoration: none;
       font-size: 16px;
-      color: white; /* Ensuring link colors are visible */
+      color: inherit; /* Inherit text color from body */
     }
   </style>
 </head>
 <body>
-  <img src="" id="logoImage" alt="CHROMA Logo" onload="startRevealing();">
+  <img src="" id="logoImage" alt="CHROMA Logo" onload="imageLoaded()">
   <canvas id="canvas"></canvas>
   <div id="links">
     <h1><a href="https://form.typeform.com/to/fccz3alG" target="_blank">Expressions of Interest</a></h1>
@@ -62,8 +62,8 @@
     const gridWidth = Math.ceil(window.innerWidth / pixelSize);
     const gridHeight = Math.ceil(window.innerHeight / pixelSize);
     const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
-    let mainColour = colours[Math.floor(Math.random() * colours.length)]; // Main background colour, randomly picked
-    let imageLoaded = false; // Flag to check if image is loaded
+    const mainColour = colours[Math.floor(Math.random() * colours.length)];
+    document.body.style.setProperty('--main-bg-color', mainColour); // Set dynamic background color
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -75,33 +75,17 @@
       locked: false
     }));
 
-    // Animation to shuffle colours until the image is loaded
-    function shuffleColours() {
-      if (!imageLoaded) {
-        pixels.forEach(pixel => {
-          if (!pixel.locked) {
-            pixel.colour = getRandomColour();
-          }
-        });
-        updateCanvas();
-        requestAnimationFrame(shuffleColours);
-      }
-    }
+    document.getElementById('logoImage').src = getRandomLogo();
 
-    function startRevealing() {
-      imageLoaded = true;
-      document.getElementById('logoImage').style.display = 'block'; // Show the image once it is loaded
-      let revealInterval = setInterval(() => {
-        pixels.forEach(pixel => {
-          if (pixel.colour === mainColour && !pixel.locked) {
-            pixel.locked = true;
+    function imageLoaded() {
+      setTimeout(() => {
+        let animationInterval = setInterval(() => {
+          lockRandomPixels();
+          if (pixels.every(p => p.locked)) {
+            clearInterval(animationInterval);
           }
-        });
-        updateCanvas();
-        if (pixels.every(pixel => pixel.locked)) {
-          clearInterval(revealInterval);
-        }
-      }, 100);
+        }, 100);
+      }, 2000); // Delay for 2 seconds before starting the animation
     }
 
     function getRandomLogo() {
@@ -120,16 +104,36 @@
       return colours[Math.floor(Math.random() * colours.length)];
     }
 
-    function updateCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pixels.forEach(pixel => {
-        ctx.fillStyle = pixel.locked ? 'rgba(0, 0, 0, 0)' : pixel.colour;
-        ctx.fillRect(pixel.x, pixel.y, pixelSize, pixelSize);
+    function adjustLinkColors() {
+      const textColor = mainColour; // Use main colour for link text directly for simplicity
+      document.querySelectorAll('#links a').forEach(link => {
+        link.style.color = textColor;
       });
     }
 
-    document.getElementById('logoImage').src = getRandomLogo(); // Set the source of the logo image
-    shuffleColours(); // Start shuffling colours immediately
+    function updateCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pixels.forEach(p => {
+        if (!p.locked && p.colour !== mainColour) {
+          p.colour = getRandomColour();
+        }
+        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour; // Show pixel if not locked
+        ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+      });
+    }
+
+    function lockRandomPixels() {
+      pixels.forEach(p => {
+        if (p.colour === mainColour && !p.locked) {
+          p.locked = true; // Lock only those that match the main colour
+        }
+      });
+      updateCanvas();
+    }
+
+    setTimeout(() => { // Start the animation after a delay
+      setInterval(lockRandomPixels, 100);
+    }, 2000);
 
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
