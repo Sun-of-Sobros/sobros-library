@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +61,7 @@
       const gridWidth = Math.ceil(window.innerWidth / pixelSize);
       const gridHeight = Math.ceil(window.innerHeight / pixelSize);
       const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
-      const mainColour = colours[Math.floor(Math.random() * colours.length)]; // Set the main background colour
+      const mainColour = colours[Math.floor(Math.random() * colours.length)];
   
       document.getElementById('logoImage').src = getRandomLogo();
       document.body.style.backgroundColor = mainColour;
@@ -93,29 +94,25 @@
           });
       }
   
-      function animateRandomColours() {
+      function animate() {
           pixels.forEach(p => {
               if (!p.locked) {
                   p.colour = getRandomColour();
               }
           });
           updateCanvas();
+          requestAnimationFrame(animate);
       }
   
-      setTimeout(() => {  // Start locking pixels after a 3-second delay
-          let lockInterval = setInterval(() => {
-              let anyLockedThisRound = false;
+      setTimeout(() => {
+          setInterval(() => {
               pixels.forEach(p => {
                   if (p.colour === mainColour && !p.locked) {
                       p.locked = true;
-                      anyLockedThisRound = true;
                   }
               });
               updateCanvas();
-              if (!anyLockedThisRound) { // No more pixels were locked in the latest interval
-                  clearInterval(lockInterval);
-              }
-          }, 100);
+          }, 40);
       }, 3000);
   
       function adjustLinkColors(bgColor) {
@@ -129,13 +126,8 @@
               link.style.color = textColor;
           });
       }
-    
-      let animationInterval = setInterval(lockRandomPixels, 100);
-
-      requestAnimationFrame(function animationLoop() {
-          animateRandomColours();
-          requestAnimationFrame(animationLoop);
-      }); // Start the random animation immediately
+  
+      animate();  // Start the continuous animation immediately
   
       window.addEventListener('resize', () => {
           canvas.width = window.innerWidth;
