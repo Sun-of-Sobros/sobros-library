@@ -4,48 +4,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CHROMA Animation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Glitchy Font -->
   <style>
     body {
       margin: 0;
       background-color: #000;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      font-family: 'Raleway', sans-serif;
+      font-family: 'Press Start 2P', sans-serif; /* Glitchy Font */
+      color: white;
+    }
+    #logoImage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      max-width: 800px;
+      z-index: 1;
     }
     canvas {
       position: absolute;
-      z-index: 1;
-    }
-    .overlay {
-      position: absolute;
-      z-index: 2;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      pointer-events: none;
+      z-index: 2;
     }
     a {
-      pointer-events: auto;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
     }
-    img {
-      width: 70%;
-      max-width: 800px;
-      mix-blend-mode: multiply;
+    h1 {
+      margin-top: 20px; /* Adjust space below the logo */
     }
   </style>
 </head>
 <body>
+  <img src="" id="logoImage" alt="CHROMA Logo">
   <canvas id="canvas"></canvas>
-  <div class="overlay">
-    <a href="http://www.huevaluechroma.com/011.php" target="_blank" id="logoLink">
-      <img id="randomLogo" alt="CHROMA Logo" />
-    </a>
+  <div>
+    <h1><a href="https://form.typeform.com/to/fccz3alG" target="_blank">Expressions of Interest</a></h1>
+    <h1><a href="mailto:colourme@chroma.institute?subject=question for CHROMA">Have a question? Get in touch</a></h1>
   </div>
   <script>
     const canvas = document.getElementById("canvas");
@@ -53,136 +57,54 @@
     const pixelSize = 75;
     const gridWidth = Math.ceil(window.innerWidth / pixelSize);
     const gridHeight = Math.ceil(window.innerHeight / pixelSize);
-    const complementaryColours = {
-      "#410a53": "#43AD3B",
-      "#DB3A34": "#FFC857",
-      "#BA2C73": "#191D32",
-      "#FF1053": "#66C7F4",
-      "#FF006E": "#8338EC",
-      "#3A86FF": "#FFBE0B",
-      "#FB5607": "#8338EC",
-      "#59CD90": "#3FA7D6",
-      "#EAE151": "#2D2A32",
-      "#2E0219": "#97EFE9",
-      "#E6AF2E": "#3D348B"
-    };
     const logoBaseURL = "https://sun-of-sobros.github.io/sobros-library/image-bank/mosh/";
     const logoFiles = [
-      "Chroma-brand_mosh-094.gif",
-      "Chroma-brand_mosh-163.gif",
-      "Chroma-brand_mosh-208.gif",
-      "Chroma-brand_mosh-269.gif",
-      "Chroma-brand_mosh-440.gif",
-      "Chroma-brand_mosh-471.gif",
-      "Chroma-brand_mosh-498.gif",
-      "Chroma-brand_mosh-509.gif",
-      "Chroma-brand_mosh-683.gif",
-      "Chroma-brand_mosh-776.gif",
-      "Chroma-brand_mosh-828.gif",
-      "Chroma-brand_mosh-854.gif",
-      "Chroma-brand_mosh-878.gif",
-      "Chroma-brand_mosh-889.gif",
-      "Chroma-brand_mosh-947.gif",
+      "Chroma-brand_mosh-094.gif", "Chroma-brand_mosh-163.gif", "Chroma-brand_mosh-208.gif",
+      "Chroma-brand_mosh-269.gif", "Chroma-brand_mosh-440.gif", "Chroma-brand_mosh-471.gif",
+      "Chroma-brand_mosh-498.gif", "Chroma-brand_mosh-509.gif", "Chroma-brand_mosh-683.gif",
+      "Chroma-brand_mosh-776.gif", "Chroma-brand_mosh-828.gif", "Chroma-brand_mosh-854.gif",
+      "Chroma-brand_mosh-878.gif", "Chroma-brand_mosh-889.gif", "Chroma-brand_mosh-947.gif",
       "Chroma-brand_mosh-953.gif"
     ];
-    const targetColours = Object.keys(complementaryColours);
-    let targetColour = targetColours[Math.floor(Math.random() * targetColours.length)];
-    let complementaryColour = complementaryColours[targetColour];
-    let animationInterval;
-    let allLocked = false;
+    document.getElementById('logoImage').src = getRandomLogo();
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const pixels = [];
+    const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
+      x: (i % gridWidth) * pixelSize,
+      y: Math.floor(i / gridWidth) * pixelSize,
+      locked: false
+    }));
 
     function getRandomLogo() {
-      const randomFile = logoFiles[Math.floor(Math.random() * logoFiles.length)];
-      return logoBaseURL + randomFile;
+      const randomIndex = Math.floor(Math.random() * logoFiles.length);
+      return logoBaseURL + logoFiles[randomIndex];
     }
 
-    function initPixels() {
-      for (let x = 0; x < gridWidth; x++) {
-        for (let y = 0; y < gridHeight; y++) {
-          const colour = randomColour();
-          pixels.push({
-            x: x * pixelSize,
-            y: y * pixelSize,
-            colour,
-            targetColour,
-            flicker: true,
-            locked: false
-          });
-        }
-      }
-    }
-
-    function randomColour() {
-      return targetColours[Math.floor(Math.random() * targetColours.length)];
-    }
-
-    function flickerPixels() {
-      pixels.forEach((p) => {
-        if (p.flicker) {
-          p.colour = randomColour();
-        }
-      });
-      drawPixels();
-    }
-
-    function drawPixels() {
+    function updateCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pixels.forEach((p) => {
-        ctx.fillStyle = p.colour;
+      pixels.forEach(p => {
+        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : 'rgba(0, 0, 0, 0.8)'; // Transparent if locked, otherwise black mask
         ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
       });
     }
 
-    function lockPixelsToTarget() {
-      let allSettled = true;
-      pixels.forEach((p) => {
-        if (!p.locked) {
-          if (p.colour === p.targetColour) {
-            p.locked = true;
-            p.flicker = false;
-          } else {
-            p.colour = randomColour();
-            allSettled = false;
-          }
-        }
-      });
-      drawPixels();
-      if (allSettled && !allLocked) {
-        allLocked = true;
-      }
+    function lockRandomPixels() {
+      const unlockedPixels = pixels.filter(p => !p.locked);
+      const toLock = unlockedPixels.slice(0, Math.max(1, unlockedPixels.length * 0.05)); // Lock about 5% each interval
+      toLock.forEach(p => p.locked = true);
+      updateCanvas();
+      if (unlockedPixels.length <= toLock.length) clearInterval(animationInterval); // Stop when all are locked
     }
 
-    function minorFlicker() {
-      const flickerCount = Math.floor(Math.random() * 10) + 1;
-      for (let i = 0; i < flickerCount; i++) {
-        const p = pixels[Math.floor(Math.random() * pixels.length)];
-        if (p.locked) {
-          p.flicker = true;
-          p.locked = false;
-        }
-      }
-      lockPixelsToTarget();
-    }
+    let animationInterval = setInterval(lockRandomPixels, 100);
 
-    function startAnimation() {
-      // Set the random logo
-      document.getElementById("randomLogo").src = getRandomLogo();
-
-      initPixels();
-      drawPixels();
-      animationInterval = setInterval(flickerPixels, 20); // Slower flicker
-      setTimeout(() => {
-        clearInterval(animationInterval);
-        animationInterval = setInterval(lockPixelsToTarget, 50);
-      }, 500); // Start locking sooner
-    }
-
-    startAnimation();
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      updateCanvas();
+    });
   </script>
 </body>
 </html>
