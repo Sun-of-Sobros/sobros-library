@@ -70,10 +70,10 @@
       canvas.height = window.innerHeight;
   
       const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
-        x: (i % gridWidth) * pixelSize,
-        y: Math.floor(i / gridWidth) * pixelSize,
-        colour: getRandomColour(),
-        locked: false
+          x: (i % gridWidth) * pixelSize,
+          y: Math.floor(i / gridWidth) * pixelSize,
+          colour: getRandomColour(),
+          locked: false
       }));
   
       function getRandomLogo() {
@@ -93,26 +93,29 @@
           });
       }
   
-      // Continuously update the canvas with random colours
       function animateRandomColours() {
-          if (!pixels.every(p => p.locked)) { // Continue updating colours until all pixels are locked
-              pixels.forEach(p => {
-                  if (!p.locked) {
-                      p.colour = getRandomColour();
-                  }
-              });
-              updateCanvas();
-              requestAnimationFrame(animateRandomColours);
-          }
-      }
-  
-      setTimeout(() => {  // Start locking pixels after a 3-second delay
           pixels.forEach(p => {
-              if (p.colour === mainColour) {
-                  p.locked = true;
+              if (!p.locked) {
+                  p.colour = getRandomColour();
               }
           });
           updateCanvas();
+      }
+  
+      setTimeout(() => {  // Start locking pixels after a 3-second delay
+          let lockInterval = setInterval(() => {
+              let anyLockedThisRound = false;
+              pixels.forEach(p => {
+                  if (p.colour === mainColour && !p.locked) {
+                      p.locked = true;
+                      anyLockedThisRound = true;
+                  }
+              });
+              updateCanvas();
+              if (!anyLockedThisRound) { // No more pixels were locked in the latest interval
+                  clearInterval(lockInterval);
+              }
+          }, 100);
       }, 3000);
   
       function adjustLinkColors(bgColor) {
@@ -126,8 +129,13 @@
               link.style.color = textColor;
           });
       }
-  
-      animateRandomColours(); // Start the random animation immediately
+    
+      let animationInterval = setInterval(lockRandomPixels, 100);
+
+      requestAnimationFrame(function animationLoop() {
+          animateRandomColours();
+          requestAnimationFrame(animationLoop);
+      }); // Start the random animation immediately
   
       window.addEventListener('resize', () => {
           canvas.width = window.innerWidth;
