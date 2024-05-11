@@ -14,7 +14,7 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      font-family: 'Press Start 2P', sans-serif; /* Glitchy Font */
+      font-family: 'Consolas', sans-serif; /* Glitchy Font */
     }
     #logoImage {
       position: absolute;
@@ -41,13 +41,12 @@
       z-index: 3;
     }
     a {
-      color: white;
       text-decoration: none;
       font-size: 16px;
     }
   </style>
 </head>
-<body style="background-color: var(--main-bg-color);">
+<body>
   <img src="" id="logoImage" alt="CHROMA Logo">
   <canvas id="canvas"></canvas>
   <div id="links">
@@ -64,7 +63,8 @@
     const mainColour = colours[Math.floor(Math.random() * colours.length)]; // Main background colour
 
     document.getElementById('logoImage').src = getRandomLogo();
-    document.body.style.setProperty('--main-bg-color', mainColour);
+    document.body.style.backgroundColor = mainColour;
+    adjustLinkColors(mainColour);
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -96,10 +96,10 @@
     function updateCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       pixels.forEach(p => {
-        if (!p.locked && p.colour !== mainColour) { // Only change those not matching the main colour
+        if (!p.locked && p.colour !== mainColour) {
           p.colour = getRandomColour();
         }
-        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour; // Show pixel if not locked
+        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour;
         ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
       });
     }
@@ -107,10 +107,23 @@
     function lockRandomPixels() {
       pixels.forEach(p => {
         if (p.colour === mainColour && !p.locked) {
-          p.locked = true; // Lock only those that match the main colour
+          p.locked = true;
         }
       });
       updateCanvas();
+    }
+
+    function adjustLinkColors(bgColor) {
+      // Determine brightness of the background colour
+      const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+      const r = parseInt(color.substring(0, 2), 16); // hex to decimal
+      const g = parseInt(color.substring(2, 4), 16); // hex to decimal
+      const b = parseInt(color.substring(4, 6), 16); // hex to decimal
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      const textColor = brightness > 125 ? 'black' : 'white'; // light background, use black text and vice versa
+      document.querySelectorAll('#links a').forEach(link => {
+        link.style.color = textColor;
+      });
     }
 
     let animationInterval = setInterval(lockRandomPixels, 100);
