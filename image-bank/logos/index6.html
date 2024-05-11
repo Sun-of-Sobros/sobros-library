@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CHROMA Animation</title>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet"> <!-- Example using VT323 -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Glitchy Font -->
   <style>
     body {
       margin: 0;
@@ -14,9 +14,7 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      font-family: 'VT323', monospace; /* Example using VT323 */
-      color: white;
-      background-color: var(--main-bg-color); /* Set background color dynamically */
+      font-family: 'Consolas', sans-serif; /* Glitchy Font */
     }
     #logoImage {
       position: absolute;
@@ -37,7 +35,7 @@
     }
     #links {
       position: absolute;
-      bottom: 10px;
+      bottom: 10px; /* Adjust based on preference */
       text-align: center;
       width: 100%;
       z-index: 3;
@@ -63,9 +61,10 @@
     const gridHeight = Math.ceil(window.innerHeight / pixelSize);
     const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
     const mainColour = colours[Math.floor(Math.random() * colours.length)]; // Main background colour
-    document.body.style.setProperty('--main-bg-color', mainColour); // Apply main colour to background
 
     document.getElementById('logoImage').src = getRandomLogo();
+    document.body.style.backgroundColor = mainColour;
+    adjustLinkColors(mainColour);
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -78,26 +77,12 @@
     }));
 
     function getRandomLogo() {
-      const logos = [
-        "Chroma-brand_mosh-094.gif", "Chroma-brand_mosh-163.gif", "Chroma-brand_mosh-208.gif",
-        "Chroma-brand_mosh-269.gif", "Chroma-brand_mosh-440.gif", "Chroma-brand_mosh-471.gif",
-        "Chroma-brand_mosh-498.gif", "Chroma-brand_mosh-509.gif", "Chroma-brand_mosh-683.gif",
-        "Chroma-brand_mosh-776.gif", "Chroma-brand_mosh-828.gif", "Chroma-brand_mosh-854.gif",
-        "Chroma-brand_mosh-878.gif", "Chroma-brand_mosh-889.gif", "Chroma-brand_mosh-947.gif",
-        "Chroma-brand_mosh-953.gif"
-      ];
-      return `https://sun-of-sobros.github.io/sobros-library/image-bank/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
+        const logos = Array.from({length: 25}, (_, i) => `Chroma-brand_mosh-${i + 1}.gif`);
+        return `https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
     }
 
     function getRandomColour() {
       return colours[Math.floor(Math.random() * colours.length)];
-    }
-
-    function adjustLinkColors() {
-      const textColor = mainColour; // Use main colour for link text directly for simplicity
-      document.querySelectorAll('#links a').forEach(link => {
-        link.style.color = textColor;
-      });
     }
 
     function updateCanvas() {
@@ -106,7 +91,7 @@
         if (!p.locked && p.colour !== mainColour) {
           p.colour = getRandomColour();
         }
-        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour; // Show pixel if not locked
+        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour;
         ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
       });
     }
@@ -114,15 +99,26 @@
     function lockRandomPixels() {
       pixels.forEach(p => {
         if (p.colour === mainColour && !p.locked) {
-          p.locked = true; // Lock only those that match the main colour
+          p.locked = true;
         }
       });
       updateCanvas();
     }
 
-    setTimeout(() => { // Start the animation after a delay
-      setInterval(lockRandomPixels, 100);
-    }, 2000);
+    function adjustLinkColors(bgColor) {
+      // Determine brightness of the background colour
+      const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+      const r = parseInt(color.substring(0, 2), 16); // hex to decimal
+      const g = parseInt(color.substring(2, 4), 16); // hex to decimal
+      const b = parseInt(color.substring(4, 6), 16); // hex to decimal
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      const textColor = brightness > 125 ? 'black' : 'white'; // light background, use black text and vice versa
+      document.querySelectorAll('#links a').forEach(link => {
+        link.style.color = textColor;
+      });
+    }
+
+    let animationInterval = setInterval(lockRandomPixels, 40);
 
     window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
