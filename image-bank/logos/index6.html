@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CHROMA Animation</title>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet"> <!-- Example using VT323 -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Glitchy Font -->
   <style>
     body {
       margin: 0;
@@ -14,9 +14,8 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      font-family: 'VT323', monospace; /* Example using VT323 */
-      color: white;
-      background-color: var(--main-bg-color); /* Set background color dynamically */
+      font-family: 'Press+Start+2P', monospace; /* Glitchy Font */
+      background-color: var(--main-bg-color); /* Dynamic background color */
     }
     #logoImage {
       position: absolute;
@@ -37,7 +36,7 @@
     }
     #links {
       position: absolute;
-      bottom: 10px;
+      bottom: 10px; /* Adjust based on preference */
       text-align: center;
       width: 100%;
       z-index: 3;
@@ -45,11 +44,12 @@
     a {
       text-decoration: none;
       font-size: 16px;
+      color: inherit; /* Inherit text color from body */
     }
   </style>
 </head>
 <body>
-  <img src="" id="logoImage" alt="CHROMA Logo">
+  <img src="" id="logoImage" alt="CHROMA Logo" onload="imageLoaded()">
   <canvas id="canvas"></canvas>
   <div id="links">
     <h1><a href="https://form.typeform.com/to/fccz3alG" target="_blank">Expressions of Interest</a></h1>
@@ -62,10 +62,8 @@
     const gridWidth = Math.ceil(window.innerWidth / pixelSize);
     const gridHeight = Math.ceil(window.innerHeight / pixelSize);
     const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
-    const mainColour = colours[Math.floor(Math.random() * colours.length)]; // Main background colour
-    document.body.style.setProperty('--main-bg-color', mainColour); // Apply main colour to background
-
-    document.getElementById('logoImage').src = getRandomLogo();
+    const mainColour = colours[Math.floor(Math.random() * colours.length)];
+    document.body.style.setProperty('--main-bg-color', mainColour); // Set dynamic background color
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -76,6 +74,19 @@
       colour: getRandomColour(),
       locked: false
     }));
+
+    document.getElementById('logoImage').src = getRandomLogo();
+
+    function imageLoaded() {
+      setTimeout(() => {
+        let animationInterval = setInterval(() => {
+          lockRandomPixels();
+          if (pixels.every(p => p.locked)) {
+            clearInterval(animationInterval);
+          }
+        }, 100);
+      }, 2000); // Delay for 2 seconds before starting the animation
+    }
 
     function getRandomLogo() {
       const logos = [
