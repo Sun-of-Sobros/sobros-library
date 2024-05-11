@@ -56,93 +56,90 @@
     <h1><a href="mailto:colourme@chroma.institute?subject=question for CHROMA">Have a question? Get in touch</a></h1>
   </div>
   <script>
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
-      const pixelSize = 75;
-      const gridWidth = Math.ceil(window.innerWidth / pixelSize);
-      const gridHeight = Math.ceil(window.innerHeight / pixelSize);
-      const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
-      let mainColour = colours[Math.floor(Math.random() * colours.length)];
-      document.body.style.backgroundColor = mainColour; // Set background color
-  
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const pixelSize = 75;
+    const gridWidth = Math.ceil(window.innerWidth / pixelSize);
+    const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+    const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
+    const mainColour = colours[Math.floor(Math.random() * colours.length)];
+    document.body.style.setProperty('--main-bg-color', mainColour); // Set dynamic background color
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
+      x: (i % gridWidth) * pixelSize,
+      y: Math.floor(i / gridWidth) * pixelSize,
+      colour: getRandomColour(),
+      locked: false
+    }));
+
+    document.getElementById('logoImage').src = getRandomLogo();
+
+    function imageLoaded() {
+      setTimeout(() => {
+        let animationInterval = setInterval(() => {
+          lockRandomPixels();
+          if (pixels.every(p => p.locked)) {
+            clearInterval(animationInterval);
+          }
+        }, 100);
+      }, 2000); // Delay for 2 seconds before starting the animation
+    }
+
+    function getRandomLogo() {
+      const logos = [
+        "Chroma-brand_mosh-094.gif", "Chroma-brand_mosh-163.gif", "Chroma-brand_mosh-208.gif",
+        "Chroma-brand_mosh-269.gif", "Chroma-brand_mosh-440.gif", "Chroma-brand_mosh-471.gif",
+        "Chroma-brand_mosh-498.gif", "Chroma-brand_mosh-509.gif", "Chroma-brand_mosh-683.gif",
+        "Chroma-brand_mosh-776.gif", "Chroma-brand_mosh-828.gif", "Chroma-brand_mosh-854.gif",
+        "Chroma-brand_mosh-878.gif", "Chroma-brand_mosh-889.gif", "Chroma-brand_mosh-947.gif",
+        "Chroma-brand_mosh-953.gif"
+      ];
+      return `https://sun-of-sobros.github.io/sobros-library/image-bank/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
+    }
+
+    function getRandomColour() {
+      return colours[Math.floor(Math.random() * colours.length)];
+    }
+
+    function adjustLinkColors() {
+      const textColor = mainColour; // Use main colour for link text directly for simplicity
+      document.querySelectorAll('#links a').forEach(link => {
+        link.style.color = textColor;
+      });
+    }
+
+    function updateCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pixels.forEach(p => {
+        if (!p.locked && p.colour !== mainColour) {
+          p.colour = getRandomColour();
+        }
+        ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour; // Show pixel if not locked
+        ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+      });
+    }
+
+    function lockRandomPixels() {
+      pixels.forEach(p => {
+        if (p.colour === mainColour && !p.locked) {
+          p.locked = true; // Lock only those that match the main colour
+        }
+      });
+      updateCanvas();
+    }
+
+    setTimeout(() => { // Start the animation after a delay
+      setInterval(lockRandomPixels, 100);
+    }, 2000);
+
+    window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-  
-      const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
-          x: (i % gridWidth) * pixelSize,
-          y: Math.floor(i / gridWidth) * pixelSize,
-          colour: getRandomColour(),
-          locked: false
-      }));
-  
-      document.getElementById('logoImage').src = getRandomLogo();
-      document.getElementById('logoImage').onload = function() {
-          startRevealing();
-      };
-  
-      // Continuous animation before the image loads
-      function shuffleColours() {
-          pixels.forEach(pixel => {
-              if (!pixel.locked) {
-                  pixel.colour = getRandomColour();
-              }
-          });
-          updateCanvas();
-          setTimeout(shuffleColours, 150); // Control speed of initial animation
-      }
-  
-      function startRevealing() {
-          pixels.forEach(pixel => {
-              setTimeout(() => { // Start revealing with a delay
-                  if (pixel.colour === mainColour) {
-                      pixel.locked = true; // Lock to reveal the image
-                  }
-              }, Math.random() * 2000); // Random delay for each pixel for effect
-          });
-  
-          function revealAnimation() {
-              let allLocked = pixels.every(pixel => pixel.locked);
-              if (!allLocked) {
-                  updateCanvas();
-                  requestAnimationFrame(revealAnimation);
-              }
-          }
-  
-          revealAnimation();
-      }
-  
-      function getRandomLogo() {
-          const logos = [
-              "Chroma-brand_mosh-094.gif", "Chroma-brand_mosh-163.gif", "Chroma-brand_mosh-208.gif",
-              "Chroma-brand_mosh-269.gif", "Chroma-brand_mosh-440.gif", "Chroma-brand_mosh-471.gif",
-              "Chroma-brand_mosh-498.gif", "Chroma-brand_mosh-509.gif", "Chroma-brand_mosh-683.gif",
-              "Chroma-brand_mosh-776.gif", "Chroma-brand_mosh-828.gif", "Chroma-brand_mosh-854.gif",
-              "Chroma-brand_mosh-878.gif", "Chroma-brand_mosh-889.gif", "Chroma-brand_mosh-947.gif",
-              "Chroma-brand_mosh-953.gif"
-          ];
-          return `https://sun-of-sobros.github.io/sobros-library/image-bank/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
-      }
-  
-      function getRandomColour() {
-          return colours[Math.floor(Math.random() * colours.length)];
-      }
-  
-      function updateCanvas() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          pixels.forEach(pixel => {
-              ctx.fillStyle = pixel.locked ? 'rgba(0, 0, 0, 0)' : pixel.colour;
-              ctx.fillRect(pixel.x, pixel.y, pixelSize, pixelSize);
-          });
-      }
-  
-      shuffleColours(); // Start the initial animation immediately
-  
-      window.addEventListener('resize', () => {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          updateCanvas();
-      });
+      updateCanvas();
+    });
   </script>
-
 </body>
 </html>
