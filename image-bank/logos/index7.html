@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CHROMA.Institute | Arts youth collective, Dandenong Ranges, VIC.</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <title>CHROMA Animation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Glitchy Font -->
   <style>
     body {
       margin: 0;
@@ -14,7 +14,7 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      font-family: 'Press+Start+2P', monospace;
+      font-family: 'Consolas', sans-serif; /* Glitchy Font */
     }
     #logoImage {
       position: absolute;
@@ -24,7 +24,6 @@
       width: 70%;
       max-width: 800px;
       z-index: 1;
-      display: none;
     }
     canvas {
       position: absolute;
@@ -36,7 +35,7 @@
     }
     #links {
       position: absolute;
-      bottom: 10px;
+      bottom: 10px; /* Adjust based on preference */
       text-align: center;
       width: 100%;
       z-index: 3;
@@ -44,93 +43,92 @@
     a {
       text-decoration: none;
       font-size: 16px;
-      color: white;
     }
   </style>
 </head>
 <body>
-  <img src="" id="logoImage" alt="CHROMA Logo" onload="startRevealing();">
+  <img src="" id="logoImage" alt="CHROMA Logo">
   <canvas id="canvas"></canvas>
   <div id="links">
     <h1><a href="https://form.typeform.com/to/fccz3alG" target="_blank">Expressions of Interest</a></h1>
     <h1><a href="mailto:colourme@chroma.institute?subject=question for CHROMA">Have a question? Get in touch</a></h1>
   </div>
   <script>
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    const pixelSize = 75;
-    const gridWidth = Math.ceil(window.innerWidth / pixelSize);
-    const gridHeight = Math.ceil(window.innerHeight / pixelSize);
-    const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
-    let mainColour = colours[Math.floor(Math.random() * colours.length)]; // Main background colour, randomly picked
-    let imageLoaded = false; // Flag to check if image is loaded
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const pixelSize = 75;
+      const gridWidth = Math.ceil(window.innerWidth / pixelSize);
+      const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+      const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
+      let mainColour = colours[Math.floor(Math.random() * colours.length)]; // Main background colour
+      document.body.style.backgroundColor = mainColour;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
-      x: (i % gridWidth) * pixelSize,
-      y: Math.floor(i / gridWidth) * pixelSize,
-      colour: getRandomColour(),
-      locked: false
-    }));
-
-    // Animation to shuffle colours until the image is loaded
-    function shuffleColours() {
-      if (!imageLoaded) {
-        pixels.forEach(pixel => {
-          if (!pixel.locked) {
-            pixel.colour = getRandomColour();
-          }
-        });
-        updateCanvas();
-        requestAnimationFrame(shuffleColours);
-      }
-    }
-
-    function startRevealing() {
-      imageLoaded = true;
-      document.getElementById('logoImage').style.display = 'block'; // Show the image once it is loaded
-      setTimeout(() => {
-        let revealInterval = setInterval(() => {
-          pixels.forEach(pixel => {
-            if (pixel.colour === mainColour && !pixel.locked) {
-              pixel.locked = true;
-            }
-          });
-          updateCanvas();
-          if (pixels.every(pixel => pixel.locked)) {
-            clearInterval(revealInterval);
-          }
-        }, 100);
-      }, 3000); // Delay the start of revealing for 3 seconds after image is loaded
-    }
-
-    function getRandomLogo() {
-        const logos = Array.from({length: 25}, (_, i) => `Chroma-brand_mosh-${i + 1}.gif`);
-        return `https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
-    }
-
-    function getRandomColour() {
-      return colours[Math.floor(Math.random() * colours.length)];
-    }
-
-    function updateCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pixels.forEach(pixel => {
-        ctx.fillStyle = pixel.locked ? 'rgba(0, 0, 0, 0)' : pixel.colour;
-        ctx.fillRect(pixel.x, pixel.y, pixelSize, pixelSize);
-      });
-    }
-
-    document.getElementById('logoImage').src = getRandomLogo(); // Set the source of the logo image
-    shuffleColours(); // Start shuffling colours immediately
-
-    window.addEventListener('resize', () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      updateCanvas();
-    });
+
+      let pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
+          x: (i % gridWidth) * pixelSize,
+          y: Math.floor(i / gridWidth) * pixelSize,
+          colour: getRandomColour(),
+          locked: false
+      }));
+
+      function getRandomColour() {
+          return colours[Math.floor(Math.random() * colours.length)];
+      }
+
+      function updateCanvas() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          pixels.forEach(pixel => {
+              ctx.fillStyle = pixel.locked ? 'rgba(0, 0, 0, 0)' : pixel.colour;
+              ctx.fillRect(pixel.x, pixel.y, pixelSize, pixelSize);
+          });
+      }
+
+      function shuffleColours() {
+          if (!document.getElementById('logoImage').complete) {
+              pixels.forEach(pixel => {
+                  if (!pixel.locked) {
+                      pixel.colour = getRandomColour();
+                  }
+              });
+              updateCanvas();
+              setTimeout(shuffleColours, 100); // Slowing down the animation
+          } else {
+              startRevealing();
+          }
+      }
+
+      function startRevealing() {
+          document.getElementById('logoImage').style.display = 'block'; // Show the image
+          function lockPixels() {
+              pixels.forEach(pixel => {
+                  if (pixel.colour === mainColour && !pixel.locked) {
+                      pixel.locked = true;
+                  }
+              });
+              updateCanvas();
+              if (!pixels.every(pixel => pixel.locked)) {
+                  setTimeout(lockPixels, 100); // Continue to check and lock
+              }
+          }
+          lockPixels();
+      }
+
+      function getRandomLogo() {
+          const logos = Array.from({length: 25}, (_, i) => `Chroma-brand_mosh-${i + 1}.gif`);
+          return `https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
+      }
+
+      document.getElementById('logoImage').src = getRandomLogo(); // Load the logo
+      shuffleColours(); // Start shuffling colours immediately
+
+      window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          updateCanvas();
+      });
   </script>
+
 </body>
 </html>
