@@ -1,141 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CHROMA Animation</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      font-family: 'Press+Start+2P', monospace;
-      background-color: var(--main-bg-color);
-    }
-    #logoImage {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70%;
-      max-width: 800px;
-      z-index: 1;
-      opacity: 0; /* Start hidden */
-    }
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 2;
-    }
-    #links {
-      position: absolute;
-      bottom: 10px;
-      text-align: center;
-      width: 100%;
-      z-index: 3;
-    }
-    a {
-      text-decoration: none;
-      font-size: 16px;
-      color: white; /* Ensuring link colors are visible */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHROMA Animation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Press Start 2P', monospace;
+            background-color: var(--main-bg-color);
+        }
+        #logoImage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            max-width: 800px;
+            z-index: 1;
+            display: none; /* Start hidden */
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+        #links {
+            position: absolute;
+            bottom: 10px;
+            text-align: center;
+            width: 100%;
+            z-index: 3;
+        }
+        a {
+            text-decoration: none;
+            font-size: 16px;
+            color: white; /* Ensuring link colors are visible */
+        }
+    </style>
 </head>
 <body>
-  <img src="" id="logoImage" alt="CHROMA Logo">
-  <canvas id="canvas"></canvas>
-  <div id="links">
-    <h1><a href="https://form.typeform.com/to/fccz3alG" target="_blank">Expressions of Interest</a></h1>
-    <h1><a href="mailto:colourme@chroma.institute?subject=question for CHROMA">Have a question? Get in touch</a></h1>
-  </div>
-  <script>
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
-    const pixelSize = 75;
-    const gridWidth = Math.ceil(window.innerWidth / pixelSize);
-    const gridHeight = Math.ceil(window.innerHeight / pixelSize);
-    const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
-    let mainColour = colours[Math.floor(Math.random() * colours.length)];
-    document.body.style.setProperty('--main-bg-color', mainColour);
+    <img src="" id="logoImage" alt="CHROMA Logo" onload="startRevealing();">
+    <canvas id="canvas"></canvas>
+    <div id="links">
+        <h1><a href="https://form.typeform.com/to/fccz3alG" target="_blank">Expressions of Interest</a></h1>
+        <h1><a href="mailto:colourme@chroma.institute?subject=question for CHROMA">Have a question? Get in touch</a></h1>
+    </div>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const pixelSize = 75;
+        const gridWidth = Math.ceil(window.innerWidth / pixelSize);
+        const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+        const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
+        let mainColour = colours[Math.floor(Math.random() * colours.length)];
+        document.body.style.setProperty('--main-bg-color', mainColour);
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-    let pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
-        x: (i % gridWidth) * pixelSize,
-        y: Math.floor(i / gridWidth) * pixelSize,
-        colour: getRandomColour(),
-        locked: false
-    }));
+        const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
+            x: (i % gridWidth) * pixelSize,
+            y: Math.floor(i / gridWidth) * pixelSize,
+            colour: getRandomColour(),
+            locked: false
+        }));
 
-    function preloadImageAndStartAnimation() {
-      const img = new Image();
-      img.onload = () => {
-        document.getElementById('logoImage').src = img.src;
-        document.getElementById('logoImage').style.opacity = 1; // Show the image
-        startAnimation();
-      };
-      img.src = getRandomLogo();
-    }
-
-    function startAnimation() {
-      requestAnimationFrame(updateAnimation);
-    }
-
-    function updateAnimation() {
-      updateCanvas();
-      if (!pixels.every(pixel => pixel.locked)) {
-        requestAnimationFrame(updateAnimation);
-      }
-    }
-
-    function lockPixels() {
-      pixels.forEach(pixel => {
-        if (pixel.colour === mainColour && !pixel.locked) {
-          pixel.locked = true;
+        function getRandomColour() {
+            return colours[Math.floor(Math.random() * colours.length)];
         }
-      });
-    }
 
-    function getRandomLogo() {
-      const logos = [
-        "Chroma-brand_mosh-094.gif", "Chroma-brand_mosh-163.gif", "Chroma-brand_mosh-208.gif",
-        "Chroma-brand_mosh-269.gif", "Chroma-brand_mosh-440.gif", "Chroma-brand_mosh-471.gif",
-        "Chroma-brand_mosh-498.gif", "Chroma-brand_mosh-509.gif", "Chroma-brand_mosh-683.gif",
-        "Chroma-brand_mosh-776.gif", "Chroma-brand_mosh-828.gif", "Chroma-brand_mosh-854.gif",
-        "Chroma-brand_mosh-878.gif", "Chroma-brand_mosh-889.gif", "Chroma-brand_mosh-947.gif",
-        "Chroma-brand_mosh-953.gif"
-      ];
-      return `https://sun-of-sobros.github.io/sobros-library/image-bank/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
-    }
+        function updateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pixels.forEach(pixel => {
+                ctx.fillStyle = pixel.locked ? 'rgba(0, 0, 0, 0)' : pixel.colour;
+                ctx.fillRect(pixel.x, pixel.y, pixelSize, pixelSize);
+            });
+        }
 
-    function getRandomColour() {
-      return colours[Math.floor(Math.random() * colours.length)];
-    }
+        function shuffleColours() {
+            if (!document.getElementById('logoImage').complete) {
+                pixels.forEach(pixel => {
+                    pixel.colour = getRandomColour();
+                });
+                updateCanvas();
+                requestAnimationFrame(shuffleColours);
+            }
+        }
 
-    function updateCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      pixels.forEach(pixel => {
-        ctx.fillStyle = pixel.locked ? 'rgba(0, 0, 0, 0)' : pixel.colour;
-        ctx.fillRect(pixel.x, pixel.y, pixelSize, pixelSize);
-      });
-    }
+        function startRevealing() {
+            document.getElementById('logoImage').style.display = 'block'; // Show the image
+            pixels.forEach(pixel => {
+                if (pixel.colour === mainColour) {
+                    pixel.locked = true;
+                }
+            });
+            updateCanvas();
+        }
 
-    preloadImageAndStartAnimation(); // Start the process
+        document.getElementById('logoImage').src = "https://sun-of-sobros.github.io/sobros-library/image-bank/mosh/Chroma-brand_mosh-947.gif"; // Set the source of the logo image
+        shuffleColours(); // Start the initial animation immediately
 
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      updateCanvas();
-    });
-  </script>
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            updateCanvas();
+        });
+    </script>
 </body>
 </html>
