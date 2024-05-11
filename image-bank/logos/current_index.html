@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHROMA Animation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Glitchy Font -->
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Press+Start+2P', monospace; /* Glitchy Font */
+    }
+    #logoImage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      max-width: 800px;
+      z-index: 1;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+    #links {
+      position: absolute;
+      bottom: 10px; /* Adjust based on preference */
+      text-align: center;
+      width: 100%;
+      z-index: 3;
+    }
+    a {
+      text-decoration: none;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <img src="" id="logoImage" alt="CHROMA Logo">
+  <canvas id="canvas"></canvas>
+  <div id="links">
+    <h1><a href="https://form.typeform.com/to/fccz3alG" target="_blank">Expressions of Interest</a></h1>
+    <h1><a href="mailto:colourme@chroma.institute?subject=question for CHROMA">Have a question? Get in touch</a></h1>
+  </div>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const pixelSize = 75;
+    const gridWidth = Math.ceil(window.innerWidth / pixelSize);
+    const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+    const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
+    const mainColour = colours[Math.floor(Math.random() * colours.length)]; // Main background colour
+
+    document.getElementById('logoImage').src = getRandomLogo();
+    document.body.style.backgroundColor = mainColour;
+    adjustLinkColors(mainColour);
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
+      x: (i % gridWidth) * pixelSize,
+      y: Math.floor(i / gridWidth) * pixelSize,
+      colour: getRandomColour(),
+      locked: false
+    }));
+
+    function getRandomLogo() {
+        const logos = Array.from({length: 25}, (_, i) => `Chroma-brand_mosh-${i + 1}.gif`);
+        return `https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
+    }
+
+    function getRandomColour() {
+        return colours[Math.floor(Math.random() * colours.length)];
+    }
+
+    function updateCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pixels.forEach(p => {
+            ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour;
+            ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+        });
+    }
+
+    function animateRandomColours() {
+        if (!pixels.every(p => p.locked)) {
+            pixels.forEach(p => {
+                if (!p.locked) {
+                    p.colour = getRandomColour();
+                }
+            });
+            updateCanvas();
+            requestAnimationFrame(animateRandomColours);
+        }
+    }
+
+    setTimeout(() => {
+        pixels.forEach(p => {
+            if (p.colour === mainColour) {
+                p.locked = true;
+            }
+        });
+        updateCanvas();
+    }, 3000);
+
+    function adjustLinkColors(bgColor) {
+        const contrastColors = {
+            "#410a53": "#EAE151",
+            "#DB3A34": "#2E0219",
+            "#BA2C73": "#EAE151",
+            "#FF1053": "#59CD90",
+            "#FF006E": "#59CD90",
+            "#3A86FF": "#FF006E",
+            "#FB5607": "#2E0219",
+            "#59CD90": "#DB3A34",
+            "#EAE151": "#410a53",
+            "#2E0219": "#FF1053",
+            "#E6AF2E": "#BA2C73"
+        };
+        const textColor = contrastColors[bgColor.toLowerCase()] || '#FFFFFF';
+        document.querySelectorAll('#links a').forEach(link => {
+            link.style.color = textColor;
+        });
+    }
+
+    animateRandomColours(); // Start the random animation immediately
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        updateCanvas();
+    });
+  </script>
+</body>
+</html>
