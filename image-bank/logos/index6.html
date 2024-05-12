@@ -88,7 +88,8 @@
   <script>
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
-      const pixelSize = 75;
+      const pixelPercentage = 10; // Adjust this value as needed
+      const pixelSize = Math.ceil((Math.min(window.innerWidth, window.innerHeight) * pixelPercentage) / 100);
       const gridWidth = Math.ceil(window.innerWidth / pixelSize);
       const gridHeight = Math.ceil(window.innerHeight / pixelSize);
       const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
