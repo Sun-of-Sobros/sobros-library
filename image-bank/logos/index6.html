@@ -67,13 +67,15 @@
           </a>
         </td>
         <td>
-          <a href="#mission_statement">
+          <a href="javascript:void(0);" onclick="openPopup()">
             <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mission.png" style="max-width: 100%; height: auto;">
           </a>
         </td>
+      </tr>
+      <tr>
         <td>
           <a href="#become_a_patron">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/patron.png" style="max-width: 100%; height: auto;">
+            <img src="https://patreon.com/chromainstitute?utm_medium=unknown&utm_source=join_link&utm_campaign=creatorshare_creator&utm_content=copyLink" style="max-width: 100%; height: auto;">
           </a>
         </td>
         <td>
@@ -81,7 +83,7 @@
             <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/email.png" style="max-width: 100%; height: auto;">
           </a>
         </td>
-      </tr> 
+      </tr>
     </table>
   </div>
 
@@ -101,7 +103,6 @@
   
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-
       const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
           x: (i % gridWidth) * pixelSize,
           y: Math.floor(i / gridWidth) * pixelSize,
