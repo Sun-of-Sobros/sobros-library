@@ -131,23 +131,23 @@
       function openPopup() {
           const popup = document.createElement('div');
           popup.style.position = 'fixed';
-          popup.style.top = '50%';
-          popup.style.left = '50%';
-          popup.style.transform = 'translate(-50%, -50%)';
+          popup.style.top = '0';
+          popup.style.left = '0';
           popup.style.width = '50%'; // Set width to 50% of the screen width
-          popup.style.maxWidth = '800px'; // Set max width to limit the width on larger screens
-          popup.style.backgroundColor = complementaryColours[mainColour]; // Use contrasting color
-          popup.style.padding = '20px'; // Add padding for content
-          popup.style.boxSizing = 'border-box'; // Include padding and border in the element's total width and height
-          popup.style.borderRadius = '10px'; // Add border radius for rounded corners
-          popup.style.zIndex = '9999'; // Ensure popup is above other elements
+          popup.style.height = '100%';
+          popup.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // Contrast color with 50% opacity
+          popup.style.display = 'flex';
+          popup.style.justifyContent = 'center';
+          popup.style.alignItems = 'center';
+          popup.style.zIndex = '9999';
 
           const closeButton = document.createElement('button');
           closeButton.textContent = 'X';
-          closeButton.style.position = 'absolute'; // Position the close button relative to the popup
-          closeButton.style.top = '10px'; // Adjust top position
-          closeButton.style.right = '10px'; // Adjust right position
+          closeButton.style.position = 'absolute';
+          closeButton.style.top = '10px';
+          closeButton.style.right = '10px';
           closeButton.style.backgroundColor = 'transparent';
+          closeButton.style.border = 'none';
           closeButton.style.color = mainColour; // Set text color to match main page background color
           closeButton.style.fontSize = '24px';
           closeButton.style.cursor = 'pointer';
@@ -157,10 +157,13 @@
           });
 
           const content = document.createElement('div');
-          content.style.color = mainColour; // Set text color to match main page background color
+          content.style.backgroundColor = 'transparent'; // Set background color to transparent
+          content.style.padding = '20px';
+          content.style.borderRadius = '10px';
 
           const missionStatement = document.createElement('h1');
           missionStatement.textContent = 'MISSION STATEMENT';
+          missionStatement.style.color = mainColour; // Set text color to match main page background color
 
           const missionText = document.createElement('p');
           missionText.textContent = `At CHROMA Institute, we are committed to fostering a dynamic and inclusive community where young artists can thrive creatively and personally. Through our peer-mentorship programs, we provide a supportive environment where teens of all ages can connect, collaborate, and learn from one another.
@@ -170,6 +173,7 @@
           Our goal is to empower young artists to become confident, empathetic, and socially aware individuals who are equipped to navigate the challenges of today's world. Through our programs, workshops, and events, we aim to inspire creativity, promote personal growth, and build a strong sense of community among our members.
 
           By fostering a supportive and inclusive environment, CHROMA Institute strives to empower young artists to reach their full potential and make a positive impact on the world around them.`;
+          missionText.style.color = mainColour; // Set text color to match main page background color
 
           content.appendChild(missionStatement);
           content.appendChild(missionText);
@@ -178,7 +182,6 @@
 
           document.body.appendChild(popup);
       }
-
 
       let lastTime = 0;
       function animate(now) {
@@ -227,3 +230,5 @@
   </script>
 </body>
 </html>
+
+
