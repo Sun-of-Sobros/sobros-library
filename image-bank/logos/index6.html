@@ -36,13 +36,13 @@
     }
     #links {
       position: absolute;
-      bottom: 100px; /* Adjust based on preference */
+      bottom: 10px; /* Adjust based on preference */
       text-align: center;
       width: 100%;
-      z-index: 3; /* Same z-index as canvas */
+      z-index: 2; /* Same z-index as canvas */
     }
     #links table {
-      width: 25%;
+      width: 50%;
       margin: auto;
     }
     #links td {
@@ -58,7 +58,7 @@
 <body>
   <img src="" id="logoImage" alt="CHROMA Logo">
   <canvas id="canvas"></canvas>
-  <div id="links" style="z-index: 3;">
+  <div id="links">
     <table>
       <tr>
         <td>
@@ -86,10 +86,11 @@
       </tr>
     </table>
   </div>
+
   <script>
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
-      const pixelPercentage = 5; // Adjust this value as needed
+      const pixelPercentage = 10; // Adjust this value as needed
       const pixelSize = Math.ceil((Math.min(window.innerWidth, window.innerHeight) * pixelPercentage) / 100);
       const gridWidth = Math.ceil(window.innerWidth / pixelSize);
       const gridHeight = Math.ceil(window.innerHeight / pixelSize);
@@ -132,32 +133,29 @@
           popup.style.left = '50%';
           popup.style.transform = 'translate(-50%, -50%)';
           popup.style.width = '50%'; // Set width to 50% of the screen width
-          popup.style.height = 'auto'; // Auto height to adjust dynamically
+          popup.style.maxWidth = '800px'; // Set max width to limit the width on larger screens
           popup.style.backgroundColor = complementaryColours[mainColour]; // Use contrasting color
-          popup.style.display = 'flex';
-          popup.style.flexDirection = 'column';
-          popup.style.alignItems = 'center';
-          popup.style.justifyContent = 'center';
-          popup.style.zIndex = '9999';
+          popup.style.padding = '20px'; // Add padding for content
+          popup.style.boxSizing = 'border-box'; // Include padding and border in the element's total width and height
+          popup.style.borderRadius = '10px'; // Add border radius for rounded corners
+          popup.style.zIndex = '9999'; // Ensure popup is above other elements
 
           const closeButton = document.createElement('button');
           closeButton.textContent = 'X';
+          closeButton.style.position = 'absolute'; // Position the close button relative to the popup
+          closeButton.style.top = '10px'; // Adjust top position
+          closeButton.style.right = '10px'; // Adjust right position
           closeButton.style.backgroundColor = 'transparent';
           closeButton.style.border = 'none';
           closeButton.style.color = mainColour; // Set text color to match main page background color
           closeButton.style.fontSize = '24px';
           closeButton.style.cursor = 'pointer';
-          closeButton.style.alignSelf = 'flex-end';
-          closeButton.style.margin = '10px';
 
           closeButton.addEventListener('click', () => {
               document.body.removeChild(popup);
           });
 
           const content = document.createElement('div');
-          content.style.backgroundColor = 'transparent'; // Set background color to transparent
-          content.style.padding = '20px';
-          content.style.borderRadius = '10px';
           content.style.color = mainColour; // Set text color to match main page background color
 
           const missionStatement = document.createElement('h1');
@@ -179,6 +177,7 @@
 
           document.body.appendChild(popup);
       }
+
 
       let lastTime = 0;
       function animate(now) {
@@ -206,12 +205,17 @@
       }, 3000);
   
       function adjustLinkColors(bgColor) {
-          const textColor = complementaryColours[bgColor]; // Get the contrasting color from the complementary colors list
+          const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+          const r = parseInt(color.substring(0, 2), 16);
+          const g = parseInt(color.substring(2, 4), 16);
+          const b = parseInt(color.substring(4, 6), 16);
+          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+          const textColor = brightness > 125 ? 'black' : 'white';
           document.querySelectorAll('#links a').forEach(link => {
               link.style.color = textColor;
           });
       }
-
+  
       animate(); // Start the random animation immediately
   
       window.addEventListener('resize', () => {
@@ -220,5 +224,6 @@
           updateCanvas();
       });
   </script>
+
 </body>
 </html>
