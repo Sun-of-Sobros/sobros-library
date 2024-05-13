@@ -133,32 +133,29 @@
           popup.style.left = '50%';
           popup.style.transform = 'translate(-50%, -50%)';
           popup.style.width = '50%'; // Set width to 50% of the screen width
-          popup.style.height = 'auto'; // Auto height to adjust dynamically
+          popup.style.maxWidth = '800px'; // Set max width to limit the width on larger screens
           popup.style.backgroundColor = complementaryColours[mainColour]; // Use contrasting color
-          popup.style.display = 'flex';
-          popup.style.flexDirection = 'column';
-          popup.style.alignItems = 'center';
-          popup.style.justifyContent = 'center';
-          popup.style.zIndex = '9999';
+          popup.style.padding = '20px'; // Add padding for content
+          popup.style.boxSizing = 'border-box'; // Include padding and border in the element's total width and height
+          popup.style.borderRadius = '10px'; // Add border radius for rounded corners
+          popup.style.zIndex = '9999'; // Ensure popup is above other elements
 
           const closeButton = document.createElement('button');
           closeButton.textContent = 'X';
+          closeButton.style.position = 'absolute'; // Position the close button relative to the popup
+          closeButton.style.top = '10px'; // Adjust top position
+          closeButton.style.right = '10px'; // Adjust right position
           closeButton.style.backgroundColor = 'transparent';
           closeButton.style.border = 'none';
           closeButton.style.color = mainColour; // Set text color to match main page background color
           closeButton.style.fontSize = '24px';
           closeButton.style.cursor = 'pointer';
-          closeButton.style.alignSelf = 'flex-end';
-          closeButton.style.margin = '10px';
 
           closeButton.addEventListener('click', () => {
               document.body.removeChild(popup);
           });
 
           const content = document.createElement('div');
-          content.style.backgroundColor = 'transparent'; // Set background color to transparent
-          content.style.padding = '20px';
-          content.style.borderRadius = '10px';
           content.style.color = mainColour; // Set text color to match main page background color
 
           const missionStatement = document.createElement('h1');
@@ -180,6 +177,7 @@
 
           document.body.appendChild(popup);
       }
+
 
       let lastTime = 0;
       function animate(now) {
