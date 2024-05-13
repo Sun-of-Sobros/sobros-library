@@ -17,6 +17,18 @@
       font-family: 'Consolas', sans-serif; /* Glitchy Font */
       background-color: #000; /* Default background color */
     }
+    #container {
+      position: relative;
+    }
+
+    #links {
+      position: absolute;
+      bottom: 10px; /* Adjust based on preference */
+      text-align: center;
+      width: 100%;
+      z-index: 3; /* Higher z-index to ensure it's above canvas */
+    }
+
     #logoImage {
       position: absolute;
       top: 50%;
@@ -24,7 +36,7 @@
       transform: translate(-50%, -50%);
       width: 70%;
       max-width: 800px;
-      z-index: 1;
+      z-index: 2; /* Set z-index to be between canvas and links */
     }
     canvas {
       position: absolute;
@@ -33,13 +45,6 @@
       width: 100%;
       height: 100%;
       z-index: 2;
-    }
-    #links {
-      position: absolute;
-      bottom: 10px; /* Adjust based on preference */
-      text-align: center;
-      width: 100%;
-      z-index: 2; /* Same z-index as canvas */
     }
     #links table {
       width: 50%;
@@ -72,37 +77,38 @@
   </style>
 </head>
 <body>
-  <img src="" id="logoImage" alt="CHROMA Logo">
-  <canvas id="canvas"></canvas>
-  <div id="links">
-    <table>
-      <tr>
-        <td>
-          <a href="https://form.typeform.com/to/fccz3alG">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/EOI.png" style="max-width: 100%; height: auto;">
-          </a>
-        </td>
-        <td>
-          <a href="javascript:void(0);" onclick="openPopup()">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mission.png" style="max-width: 100%; height: auto;">
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="#https://patreon.com/chromainstitute">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/patron.png" style="max-width: 100%; height: auto;">
-          </a>
-        </td>
-        <td>
-          <a href="mailto:colourme@chroma.institute?subject=question%20for%20CHROMA">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/email.png" style="max-width: 100%; height: auto;">
-          </a>
-        </td>
-      </tr>
-    </table>
+  <div id="container">
+    <img src="" id="logoImage" alt="CHROMA Logo">
+    <canvas id="canvas"></canvas>
+    <div id="links">
+      <table>
+        <tr>
+          <td>
+            <a href="https://form.typeform.com/to/fccz3alG">
+              <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/EOI.png" style="max-width: 100%; height: auto;">
+            </a>
+          </td>
+          <td>
+            <a href="javascript:void(0);" onclick="openPopup()">
+              <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mission.png" style="max-width: 100%; height: auto;">
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="#https://patreon.com/chromainstitute">
+              <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/patron.png" style="max-width: 100%; height: auto;">
+            </a>
+          </td>
+          <td>
+            <a href="mailto:colourme@chroma.institute?subject=question%20for%20CHROMA">
+              <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/email.png" style="max-width: 100%; height: auto;">
+            </a>
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
-
   <script>
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
