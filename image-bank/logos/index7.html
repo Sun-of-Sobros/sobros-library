@@ -1,7 +1,3 @@
-This version of the website is almost 100% working.  We have only got one issue now:
-
-- The buttons cannot be clicked at all, perhaps they are behind a layer that now stops them from being clickable? If that's the case and the only way is to move them above the mask layer, can we instead put a different layer above the mask that is just the same table layout that has invisible cells? Or is there an alterantive way to restore the button urls?
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +32,7 @@ This version of the website is almost 100% working.  We have only got one issue 
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 3; /* Adjusted z-index */
+      z-index: 1; /* Adjusted z-index */
     }
     #links table {
       width: 30%;
@@ -62,7 +58,7 @@ This version of the website is almost 100% working.  We have only got one issue 
 </head>
 <body>
   <img src="" id="logoImage" alt="CHROMA Logo">
-  <canvas id="canvas" style="z-index: 3;"></canvas>
+  <canvas id="canvas" style="z-index: 1;"></canvas>
   <div id="links" style="z-index: 2;">
     <table>
       <tr>
@@ -132,12 +128,12 @@ This version of the website is almost 100% working.  We have only got one issue 
       }
       function openPopup() {
           const popup = document.createElement('div');
-          popup.style.position = 'fixed';
+          popup.style.position = 'center';
           popup.style.top = '0';
           popup.style.left = '0';
           popup.style.width = '50%'; // Set width to 50% of the screen width
-          popup.style.height = '100%';
-          popup.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // Contrast color with 50% opacity
+          popup.style.height = '50%';
+          popup.style.backgroundColor = 'rgba(255, 255, 255, 0.75)'; // Contrast color with 75% opacity
           popup.style.display = 'flex';
           popup.style.justifyContent = 'center';
           popup.style.alignItems = 'center';
@@ -232,3 +228,4 @@ This version of the website is almost 100% working.  We have only got one issue 
   </script>
 </body>
 </html>
+
