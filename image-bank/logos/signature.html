@@ -8,118 +8,58 @@
   <style>
     body {
       margin: 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 400px; /* Set height of email signature */
       font-family: 'Consolas', sans-serif; /* Glitchy Font */
       overflow: hidden;
     }
-    .left-column {
-      flex: 1;
+    .email-signature {
+      background-color: #410a53; /* Default background color */
+      color: #43AD3B; /* Default text color */
       padding: 20px;
-      color: white; /* Initial color for text */
-    }
-    .contact-info {
-      margin-top: 10px;
-    }
-    .right-column {
-      flex: 1;
-      position: relative;
-      height: 100%; /* Set height to fill parent */
+      border-radius: 10px;
+      text-align: center;
     }
     .logo {
-      position: absolute;
-      top: 50%;
-      right: 20px;
-      transform: translateY(-50%);
-      max-height: 300px;
-      opacity: 0; /* Initially hidden */
-      animation: revealLogo 5s infinite; /* Animation to reveal logo */
-    }
-
-    /* Animation to reveal logo */
-    @keyframes revealLogo {
-      0%, 100% {
-        opacity: 0;
-      }
-      50% {
-        opacity: 1;
-      }
+      width: 250px;
+      height: 250px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
-<body>
-  <div class="left-column">
+<body style="background-color: #410a53; color: #43AD3B;"> <!-- Initial background and text color -->
+  <div class="email-signature">
+    <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/Chroma-brand_mosh-1.gif" alt="CHROMA Logo" class="logo">
     <h2>BRENT DAKIS</h2>
     <p>Creative Director</p>
-    <div class="contact-info">
-      <p>0481 136 334</p>
-      <p>colourme@chroma.institute</p>
-    </div>
-  </div>
-  <div class="right-column" style="background-color: transparent;"> <!-- Transparent background -->
-    <img src="" class="logo" alt="CHROMA Logo">
-    <canvas id="canvas"></canvas>
+    <p>0481 136 334</p>
+    <p>colourme@chroma.institute</p>
   </div>
 
   <script>
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
-      const pixelPercentage = 10; // Adjust this value as needed
-      const pixelSize = Math.ceil((Math.min(window.innerWidth, window.innerHeight) * pixelPercentage) / 100);
-      const gridWidth = Math.ceil(800 / pixelSize); // Limit table width to 800px
-      const gridHeight = Math.ceil(400 / pixelSize); // Limit table height to 400px
-      const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
-      const mainColour = colours[Math.floor(Math.random() * colours.length)];
+    const complementaryColours = {
+        "#410a53": "#43AD3B",
+        "#DB3A34": "#FFC857",
+        "#BA2C73": "#191D32",
+        "#FF1053": "#66C7F4",
+        "#FF006E": "#8338EC",
+        "#3A86FF": "#FFBE0B",
+        "#FB5607": "#8338EC",
+        "#59CD90": "#3FA7D6",
+        "#EAE151": "#2D2A32",
+        "#2E0219": "#97EFE9",
+        "#E6AF2E": "#3D348B"
+    };
 
-      document.querySelector('.logo').src = getRandomLogo();
-      adjustLinkColors(mainColour);
+    const colours = Object.keys(complementaryColours);
+    const mainColour = colours[Math.floor(Math.random() * colours.length)];
 
-      canvas.width = 800; // Set canvas width to 800px
-      canvas.height = 400; // Set canvas height to 400px
-      const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
-          x: (i % gridWidth) * pixelSize,
-          y: Math.floor(i / gridWidth) * pixelSize,
-          colour: getRandomColour(),
-          locked: false
-      }));
+    // Set background color and text color of signature
+    const signature = document.querySelector('.email-signature');
+    signature.style.backgroundColor = mainColour;
+    signature.style.color = complementaryColours[mainColour];
 
-      function getRandomLogo() {
-          const logos = Array.from({length: 25}, (_, i) => `Chroma-brand_mosh-${i + 1}.gif`);
-          return `https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
-      }
-
-      function getRandomColour() {
-          return colours[Math.floor(Math.random() * colours.length)];
-      }
-
-      function updateCanvas() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          pixels.forEach(p => {
-              ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour;
-              ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
-          });
-      }
-      function adjustLinkColors(bgColor) {
-          const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
-          const r = parseInt(color.substring(0, 2), 16);
-          const g = parseInt(color.substring(2, 4), 16);
-          const b = parseInt(color.substring(4, 6), 16);
-          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-          const textColor = brightness > 125 ? 'black' : 'white';
-          document.querySelectorAll('.left-column *').forEach(element => {
-              element.style.color = textColor;
-          });
-      }
-
-      animate(); // Start the random animation immediately
-
-      window.addEventListener('resize', () => {
-          canvas.width = 800; // Set canvas width to 800px
-          canvas.height = 400; // Set canvas height to 400px
-          updateCanvas();
-      });
+    // Set background color and text color of email body
+    document.body.style.backgroundColor = mainColour;
+    document.body.style.color = complementaryColours[mainColour];
   </script>
 
 </body>
