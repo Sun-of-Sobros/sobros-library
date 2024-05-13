@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Signature</title>
+  <style>
+    /* Overall signature style */
+    .email-signature {
+      max-width: 800px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+    /* Left column */
+    .left-column {
+      flex: 1;
+      background-color: #410a53; /* Random background color */
+      color: white; /* Text color contrasting with the background */
+      padding: 20px;
+    }
+    /* Right column */
+    .right-column {
+      flex: 1;
+      position: relative;
+      height: 100%;
+    }
+    .logo {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      max-height: 300px;
+      animation: revealLogo 10s infinite; /* Animation to reveal logo */
+    }
+    /* Animation to reveal logo */
+    @keyframes revealLogo {
+      0% {
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-signature">
+    <div class="left-column">
+      <h2>BRENT DAKIS</h2>
+      <p>Creative Director</p>
+      <p>0481 136 334</p>
+      <p>colourme@chroma.institute</p>
+    </div>
+    <div class="right-column">
+      <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/Chroma-brand_mosh-6.gif" alt="Random Logo" class="logo">
+    </div>
+  </div>
+</body>
+</html>
