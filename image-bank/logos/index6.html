@@ -127,57 +127,60 @@
           });
       }
       function openPopup() {
-        const popup = document.createElement('div');
-        popup.style.position = 'fixed';
-        popup.style.top = '0';
-        popup.style.left = '0';
-        popup.style.width = '100%';
-        popup.style.height = '100%';
-        popup.style.backgroundColor = 'rgba(0, 0, 0, 0.65)';
-        popup.style.display = 'flex';
-        popup.style.justifyContent = 'center';
-        popup.style.alignItems = 'center';
-        popup.style.zIndex = '9999';
+          const popup = document.createElement('div');
+          popup.style.position = 'fixed';
+          popup.style.top = '0';
+          popup.style.left = '0';
+          popup.style.width = '50%'; // Set width to 50% of the screen width
+          popup.style.height = '100%';
+          popup.style.backgroundColor = 'rgba(255, 255, 255, 0.5)'; // Contrast color with 50% opacity
+          popup.style.display = 'flex';
+          popup.style.justifyContent = 'center';
+          popup.style.alignItems = 'center';
+          popup.style.zIndex = '9999';
 
-        const closeButton = document.createElement('button');
-        closeButton.textContent = 'X';
-        closeButton.style.position = 'absolute';
-        closeButton.style.top = '10px';
-        closeButton.style.right = '10px';
-        closeButton.style.backgroundColor = 'transparent';
-        closeButton.style.border = 'none';
-        closeButton.style.color = '#fff';
-        closeButton.style.fontSize = '24px';
-        closeButton.style.cursor = 'pointer';
+          const closeButton = document.createElement('button');
+          closeButton.textContent = 'X';
+          closeButton.style.position = 'absolute';
+          closeButton.style.top = '10px';
+          closeButton.style.right = '10px';
+          closeButton.style.backgroundColor = 'transparent';
+          closeButton.style.border = 'none';
+          closeButton.style.color = mainColour; // Set text color to match main page background color
+          closeButton.style.fontSize = '24px';
+          closeButton.style.cursor = 'pointer';
 
-        closeButton.addEventListener('click', () => {
-          document.body.removeChild(popup);
-        });
+          closeButton.addEventListener('click', () => {
+              document.body.removeChild(popup);
+          });
 
-        const content = document.createElement('div');
-        content.style.backgroundColor = '#fff';
-        content.style.padding = '20px';
-        content.style.borderRadius = '10px';
+          const content = document.createElement('div');
+          content.style.backgroundColor = 'transparent'; // Set background color to transparent
+          content.style.padding = '20px';
+          content.style.borderRadius = '10px';
 
-        const missionStatement = document.createElement('h1');
-        missionStatement.textContent = 'MISSION STATEMENT';
+          const missionStatement = document.createElement('h1');
+          missionStatement.textContent = 'MISSION STATEMENT';
+          missionStatement.style.color = mainColour; // Set text color to match main page background color
 
-        const missionText = document.createElement('p');
-        missionText.textContent = `At CHROMA Institute, we are committed to fostering a dynamic and inclusive community where young artists can thrive creatively and personally. Through our peer-mentorship programs, we provide a supportive environment where teens of all ages can connect, collaborate, and learn from one another.
+          const missionText = document.createElement('p');
+          missionText.textContent = `At CHROMA Institute, we are committed to fostering a dynamic and inclusive community where young artists can thrive creatively and personally. Through our peer-mentorship programs, we provide a supportive environment where teens of all ages can connect, collaborate, and learn from one another.
 
-        We believe that peer-mentorship offers unique benefits, allowing young artists to gain insights, perspectives, and support that they may not receive elsewhere. By creating a comfortable and casual art space, we encourage open dialogue and the sharing of ideas, providing teens with the opportunity to discuss the issues they face and explore different viewpoints.
+          We believe that peer-mentorship offers unique benefits, allowing young artists to gain insights, perspectives, and support that they may not receive elsewhere. By creating a comfortable and casual art space, we encourage open dialogue and the sharing of ideas, providing teens with the opportunity to discuss the issues they face and explore different viewpoints.
 
-        Our goal is to empower young artists to become confident, empathetic, and socially aware individuals who are equipped to navigate the challenges of today's world. Through our programs, workshops, and events, we aim to inspire creativity, promote personal growth, and build a strong sense of community among our members.
+          Our goal is to empower young artists to become confident, empathetic, and socially aware individuals who are equipped to navigate the challenges of today's world. Through our programs, workshops, and events, we aim to inspire creativity, promote personal growth, and build a strong sense of community among our members.
 
-        By fostering a supportive and inclusive environment, CHROMA Institute strives to empower young artists to reach their full potential and make a positive impact on the world around them.`;
+          By fostering a supportive and inclusive environment, CHROMA Institute strives to empower young artists to reach their full potential and make a positive impact on the world around them.`;
+          missionText.style.color = mainColour; // Set text color to match main page background color
 
-        content.appendChild(missionStatement);
-        content.appendChild(missionText);
-        popup.appendChild(closeButton);
-        popup.appendChild(content);
+          content.appendChild(missionStatement);
+          content.appendChild(missionText);
+          popup.appendChild(closeButton);
+          popup.appendChild(content);
 
-        document.body.appendChild(popup);
+          document.body.appendChild(popup);
       }
+
 
       let lastTime = 0;
       function animate(now) {
