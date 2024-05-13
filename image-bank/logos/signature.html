@@ -17,10 +17,8 @@
     }
     .left-column {
       flex: 1;
-      padding-left: 20px;
+      padding: 20px;
       color: white; /* Initial color for text */
-      background-color: #410a53; /* Default background color */
-      position: relative;
     }
     .contact-info {
       margin-top: 10px;
@@ -36,7 +34,8 @@
       right: 20px;
       transform: translateY(-50%);
       max-height: 300px;
-      animation: revealLogo 10s infinite; /* Animation to reveal logo */
+      opacity: 0; /* Initially hidden */
+      animation: revealLogo 5s infinite; /* Animation to reveal logo */
     }
 
     /* Animation to reveal logo */
@@ -59,7 +58,7 @@
       <p>colourme@chroma.institute</p>
     </div>
   </div>
-  <div class="right-column">
+  <div class="right-column" style="background-color: transparent;"> <!-- Transparent background -->
     <img src="" class="logo" alt="CHROMA Logo">
     <canvas id="canvas"></canvas>
   </div>
@@ -69,17 +68,16 @@
       const ctx = canvas.getContext("2d");
       const pixelPercentage = 10; // Adjust this value as needed
       const pixelSize = Math.ceil((Math.min(window.innerWidth, window.innerHeight) * pixelPercentage) / 100);
-      const gridWidth = Math.ceil(window.innerWidth / pixelSize);
-      const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+      const gridWidth = Math.ceil(800 / pixelSize); // Limit table width to 800px
+      const gridHeight = Math.ceil(400 / pixelSize); // Limit table height to 400px
       const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
       const mainColour = colours[Math.floor(Math.random() * colours.length)];
 
       document.querySelector('.logo').src = getRandomLogo();
-      document.body.style.backgroundColor = mainColour;
       adjustLinkColors(mainColour);
 
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = 800; // Set canvas width to 800px
+      canvas.height = 400; // Set canvas height to 400px
       const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
           x: (i % gridWidth) * pixelSize,
           y: Math.floor(i / gridWidth) * pixelSize,
@@ -118,8 +116,8 @@
       animate(); // Start the random animation immediately
 
       window.addEventListener('resize', () => {
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
+          canvas.width = 800; // Set canvas width to 800px
+          canvas.height = 400; // Set canvas height to 400px
           updateCanvas();
       });
   </script>
