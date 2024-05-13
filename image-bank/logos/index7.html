@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHROMA Animation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Glitchy Font -->
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Consolas', sans-serif; /* Glitchy Font */
+      background-color: #000; /* Default background color */
+    }
+    #logoImage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70%;
+      max-width: 800px;
+      z-index: 1;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3; /* Adjusted z-index */
+    }
+    #links table {
+      width: 30%;
+      margin: auto;
+      z-index: 2;
+    }
+    #links {
+      position: absolute;
+      bottom: 150px; /* Adjust based on preference */
+      text-align: center;
+      width: 100%;
+      z-index: 4; /* Increased z-index */
+    }
+    #links td {
+      width: 25%;
+      text-align: center;
+    }
+    a {
+      text-decoration: none;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <img src="" id="logoImage" alt="CHROMA Logo">
+  <canvas id="canvas" style="z-index: 3;"></canvas>
+  <!-- Adding a transparent overlay to ensure buttons are clickable -->
+  <div id="buttonOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;"></div>
+  <div id="links" style="z-index: 4;"> <!-- Increased z-index -->
+    <table>
+      <tr>
+        <td>
+          <a href="https://form.typeform.com/to/fccz3alG">
+            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/EOI.png" style="max-width: 100%; height: auto;">
+          </a>
+        </td>
+        <td>
+          <a href="javascript:void(0);" onclick="openPopup()">
+            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mission.png" style="max-width: 100%; height: auto;">
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="https://patreon.com/chromainstitute">
+            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/patron.png" style="max-width: 100%; height: auto;">
+          </a>
+        </td>
+        <td>
+          <a href="mailto:colourme@chroma.institute?subject=question%20for%20CHROMA">
+            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/email.png" style="max-width: 100%; height: auto;">
+          </a>
+        </td>
+      </tr>
+    </table>
+  </div>
+ <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const pixelPercentage = 10; // Adjust this value as needed
+      const pixelSize = Math.ceil((Math.min(window.innerWidth, window.innerHeight) * pixelPercentage) / 100);
+      const gridWidth = Math.ceil(window.innerWidth / pixelSize);
+      const gridHeight = Math.ceil(window.innerHeight / pixelSize);
+      const colours = ["#410a53", "#DB3A34", "#BA2C73", "#FF1053", "#FF006E", "#3A86FF", "#FB5607", "#59CD90", "#EAE151", "#2E0219", "#E6AF2E"];
+      const mainColour = colours[Math.floor(Math.random() * colours.length)];
+  
+      document.getElementById('logoImage').src = getRandomLogo();
+      document.body.style.backgroundColor = mainColour;
+      adjustLinkColors(mainColour);
+  
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const pixels = Array.from({ length: gridWidth * gridHeight }, (_, i) => ({
+          x: (i % gridWidth) * pixelSize,
+          y: Math.floor(i / gridWidth) * pixelSize,
+          colour: getRandomColour(),
+          locked: false
+      }));
+  
+      function getRandomLogo() {
+          const logos = Array.from({length: 25}, (_, i) => `Chroma-brand_mosh-${i + 1}.gif`);
+          return `https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mosh/${logos[Math.floor(Math.random() * logos.length)]}`;
+      }
+  
+      function getRandomColour() {
+          return colours[Math.floor(Math.random() * colours.length)];
+      }
+  
+      function updateCanvas() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          pixels.forEach(p => {
+              ctx.fillStyle = p.locked ? 'rgba(0, 0, 0, 0)' : p.colour;
+              ctx.fillRect(p.x, p.y, pixelSize, pixelSize);
+          });
+      }
+      function openPopup() {
+          const popup = document.createElement('div');
+          popup.style.position = 'fixed';
+          popup.style.top = '50%';
+          popup.style.left = '50%';
+          popup.style.transform = 'translate(-50%, -50%)';
+          popup.style.width = '50%'; // Set width to 50% of the screen width
+          popup.style.maxWidth = '800px'; // Set max width to limit the width on larger screens
+          popup.style.backgroundColor = complementaryColours[mainColour]; // Use contrasting color
+          popup.style.padding = '20px'; // Add padding for content
+          popup.style.boxSizing = 'border-box'; // Include padding and border in the element's total width and height
+          popup.style.borderRadius = '10px'; // Add border radius for rounded corners
+          popup.style.zIndex = '9999'; // Ensure popup is above other elements
+
+          const closeButton = document.createElement('button');
+          closeButton.textContent = 'X';
+          closeButton.style.position = 'absolute'; // Position the close button relative to the popup
+          closeButton.style.top = '10px'; // Adjust top position
+          closeButton.style.right = '10px'; // Adjust right position
+          closeButton.style.backgroundColor = 'transparent';
+          closeButton.style.color = mainColour; // Set text color to match main page background color
+          closeButton.style.fontSize = '24px';
+          closeButton.style.cursor = 'pointer';
+
+          closeButton.addEventListener('click', () => {
+              document.body.removeChild(popup);
+          });
+
+          const content = document.createElement('div');
+          content.style.color = mainColour; // Set text color to match main page background color
+
+          const missionStatement = document.createElement('h1');
+          missionStatement.textContent = 'MISSION STATEMENT';
+
+          const missionText = document.createElement('p');
+          missionText.textContent = `At CHROMA Institute, we are committed to fostering a dynamic and inclusive community where young artists can thrive creatively and personally. Through our peer-mentorship programs, we provide a supportive environment where teens of all ages can connect, collaborate, and learn from one another.
+
+          We believe that peer-mentorship offers unique benefits, allowing young artists to gain insights, perspectives, and support that they may not receive elsewhere. By creating a comfortable and casual art space, we encourage open dialogue and the sharing of ideas, providing teens with the opportunity to discuss the issues they face and explore different viewpoints.
+
+          Our goal is to empower young artists to become confident, empathetic, and socially aware individuals who are equipped to navigate the challenges of today's world. Through our programs, workshops, and events, we aim to inspire creativity, promote personal growth, and build a strong sense of community among our members.
+
+          By fostering a supportive and inclusive environment, CHROMA Institute strives to empower young artists to reach their full potential and make a positive impact on the world around them.`;
+
+          content.appendChild(missionStatement);
+          content.appendChild(missionText);
+          popup.appendChild(closeButton);
+          popup.appendChild(content);
+
+          document.body.appendChild(popup);
+      }
+
+
+      let lastTime = 0;
+      function animate(now) {
+          if (!lastTime || now - lastTime >= 100) { // Only update every 100 milliseconds
+              pixels.forEach(p => {
+                  if (!p.locked) {
+                      p.colour = getRandomColour();
+                  }
+              });
+              updateCanvas();
+              lastTime = now;
+          }
+          requestAnimationFrame(animate);
+      }
+  
+      setTimeout(() => {
+          setInterval(() => {
+              pixels.forEach(p => {
+                  if (p.colour === mainColour && !p.locked) {
+                      p.locked = true;
+                  }
+              });
+              updateCanvas();
+          }, 40);
+      }, 3000);
+  
+      function adjustLinkColors(bgColor) {
+          const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+          const r = parseInt(color.substring(0, 2), 16);
+          const g = parseInt(color.substring(2, 4), 16);
+          const b = parseInt(color.substring(4, 6), 16);
+          const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+          const textColor = brightness > 125 ? 'black' : 'white';
+          document.querySelectorAll('#links a').forEach(link => {
+              link.style.color = textColor;
+          });
+      }
+  
+      animate(); // Start the random animation immediately
+  
+      window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          updateCanvas();
+      });
+  </script>
+</body>
+</html>
