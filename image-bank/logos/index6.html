@@ -1,3 +1,7 @@
+ere's the updated HTML code with the necessary changes:
+
+html
+Copy code
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +36,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 2;
+      z-index: 3; /* Adjusted z-index */
     }
     #links table {
       width: 30%;
@@ -57,7 +61,37 @@
   </style>
 </head>
 <body>
-  <script>
+  <img src="" id="logoImage" alt="CHROMA Logo">
+  <canvas id="canvas" style="z-index: 3;"></canvas>
+  <div id="links" style="z-index: 2;">
+    <table>
+      <tr>
+        <td>
+          <a href="https://form.typeform.com/to/fccz3alG">
+            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/EOI.png" style="max-width: 100%; height: auto;">
+          </a>
+        </td>
+        <td>
+          <a href="javascript:void(0);" onclick="openPopup()">
+            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mission.png" style="max-width: 100%; height: auto;">
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="https://patreon.com/chromainstitute">
+            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/patron.png" style="max-width: 100%; height: auto;">
+          </a>
+        </td>
+        <td>
+          <a href="mailto:colourme@chroma.institute?subject=question%20for%20CHROMA">
+            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/email.png" style="max-width: 100%; height: auto;">
+          </a>
+        </td>
+      </tr>
+    </table>
+  </div>
+ <script>
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
       const pixelPercentage = 10; // Adjust this value as needed
@@ -126,7 +160,7 @@
           });
 
           const content = document.createElement('div');
-          content.style.color = mainColour; // Set text color to match main page background color
+         content.style.color = mainColour; // Set text color to match main page background color
 
           const missionStatement = document.createElement('h1');
           missionStatement.textContent = 'MISSION STATEMENT';
@@ -194,35 +228,5 @@
           updateCanvas();
       });
   </script>
-  <img src="" id="logoImage" alt="CHROMA Logo">
-  <canvas id="canvas"></canvas>
-  <div id="links" style="z-index: 2;">
-    <table>
-      <tr>
-        <td>
-          <a href="https://form.typeform.com/to/fccz3alG">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/EOI.png" style="max-width: 100%; height: auto;">
-          </a>
-        </td>
-        <td>
-          <a href="javascript:void(0);" onclick="openPopup()">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/mission.png" style="max-width: 100%; height: auto;">
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="https://patreon.com/chromainstitute">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/patron.png" style="max-width: 100%; height: auto;">
-          </a>
-        </td>
-        <td>
-          <a href="mailto:colourme@chroma.institute?subject=question%20for%20CHROMA">
-            <img src="https://sun-of-sobros.github.io/sobros-library/image-bank/logos/email.png" style="max-width: 100%; height: auto;">
-          </a>
-        </td>
-      </tr>
-    </table>
-  </div>
 </body>
 </html>
