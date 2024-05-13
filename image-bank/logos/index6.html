@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CHROMA Animation</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Glitchy Font -->
-    <style>
+  <style>
     body {
       margin: 0;
       display: flex;
@@ -53,12 +53,28 @@
       text-decoration: none;
       font-size: 16px;
     }
+
+    /* Media query for mobile devices */
+    @media only screen and (max-width: 600px) {
+      #logoImage {
+        width: 100%; /* Make logo image full width */
+      }
+      canvas {
+        width: 20%; /* Adjust width of canvas for mobile */
+      }
+      #links table {
+        width: 100%; /* Make table full width for mobile */
+      }
+      #links td {
+        width: 50%; /* Adjust width of table cells for mobile */
+      }
+    }
   </style>
 </head>
 <body>
   <img src="" id="logoImage" alt="CHROMA Logo">
   <canvas id="canvas"></canvas>
-  <div id="links" style="z-index: 2;">
+  <div id="links">
     <table>
       <tr>
         <td>
